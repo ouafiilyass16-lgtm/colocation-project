@@ -20,8 +20,12 @@ const annonceSchema = new mongoose.Schema({
   dateDisponibilite: { type: Date, required: true },
   statut: {
     type: String,
-    enum: ['active', 'archivee', 'en_attente'],
+    enum: ['en_attente', 'active', 'archivee', 'rejetee'],
     default: 'en_attente',
+  },
+  commentaireAdmin: {
+    type: String,
+    default: null,
   },
   photos: {
     type: [photoSchema],

@@ -20,7 +20,7 @@ exports.creerAnnonce = async (req, res) => {
     });
 
     await annonce.save();
-    res.status(201).json({ message: 'Annonce créée avec succès', annonce });
+    res.status(201).json({ message: 'Annonce créée avec succès, en attente de validation admin', annonce });
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
   }
@@ -65,7 +65,7 @@ exports.getMesAnnonces = async (req, res) => {
   }
 };
 
-// Modifier une annonce
+// Modifier une annonce (remet en attente pour revalidation admin)
 exports.modifierAnnonce = async (req, res) => {
   try {
     const annonce = await Annonce.findById(req.params.id);
@@ -75,33 +75,72 @@ exports.modifierAnnonce = async (req, res) => {
       return res.status(403).json({ message: 'Accès refusé' });
 
     Object.assign(annonce, req.body);
+    annonce.statut = 'en_attente'; // remet en attente après modification
+    annonce.commentaireAdmin = null;
     await annonce.save();
 
-    res.status(200).json({ message: 'Annonce modifiée', annonce });
+    res.status(200).json({ message: 'Annonce modifiée, en attente de revalidation admin', annonce });
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
   }
 };
 
-// Publier une annonce
-exports.publierAnnonce = async (req, res) => {
+// ─── ADMIN : Voir toutes les annonces en attente ──────────────────────────────
+exports.getAnnoncesEnAttente = async (req, res) => {
+  try {
+    const annonces = await Annonce.find({ statut: 'en_attente' })
+      .populate('proprietaire', 'nom email')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(annonces);
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
+};
+
+// ─── ADMIN : Valider une annonce ──────────────────────────────────────────────
+exports.validerAnnonce = async (req, res) => {
   try {
     const annonce = await Annonce.findById(req.params.id);
 
     if (!annonce) return res.status(404).json({ message: 'Annonce non trouvée' });
-    if (annonce.proprietaire.toString() !== req.user.id)
-      return res.status(403).json({ message: 'Accès refusé' });
+    if (annonce.statut !== 'en_attente')
+      return res.status(400).json({ message: `Annonce déjà traitée (statut: ${annonce.statut})` });
 
     annonce.statut = 'active';
+    annonce.commentaireAdmin = null;
     await annonce.save();
 
-    res.status(200).json({ message: 'Annonce publiée', annonce });
+    res.status(200).json({ message: 'Annonce validée et publiée avec succès', annonce });
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
   }
 };
 
-// Archiver une annonce
+// ─── ADMIN : Rejeter une annonce ──────────────────────────────────────────────
+exports.rejeterAnnonce = async (req, res) => {
+  try {
+    const annonce = await Annonce.findById(req.params.id);
+
+    if (!annonce) return res.status(404).json({ message: 'Annonce non trouvée' });
+    if (annonce.statut !== 'en_attente')
+      return res.status(400).json({ message: `Annonce déjà traitée (statut: ${annonce.statut})` });
+
+    const { commentaire } = req.body;
+    if (!commentaire)
+      return res.status(400).json({ message: 'Un commentaire de rejet est obligatoire' });
+
+    annonce.statut = 'rejetee';
+    annonce.commentaireAdmin = commentaire;
+    await annonce.save();
+
+    res.status(200).json({ message: 'Annonce rejetée', annonce });
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
+};
+
+// Archiver une annonce (propriétaire)
 exports.archiverAnnonce = async (req, res) => {
   try {
     const annonce = await Annonce.findById(req.params.id);
@@ -160,11 +199,11 @@ exports.ajouterPhotos = async (req, res) => {
         message: `Maximum 5 photos autorisées. Vous avez déjà ${annonce.photos.length} photo(s), vous pouvez en ajouter ${5 - annonce.photos.length} de plus.`
       });
 
-    const nouvellsPhotos = photos.map(p => ({ url: p.url, ordre: p.ordre || 0 }));
+    const nouvellesPhotos = photos.map(p => ({ url: p.url, ordre: p.ordre || 0 }));
 
     await Annonce.findByIdAndUpdate(
       req.params.id,
-      { $push: { photos: { $each: nouvellsPhotos } } },
+      { $push: { photos: { $each: nouvellesPhotos } } },
       { new: true }
     );
 
