@@ -247,3 +247,64 @@ exports.supprimerPhoto = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
   }
 };
+// Recherche avancée
+exports.rechercherAnnonces = async (req, res) => {
+  try {
+    const {
+      ville,
+      typeLogement,
+      prixMin,
+      prixMax,
+      surfaceMin,
+      surfaceMax,
+      disponibleAvant,
+      disponibleApres,
+    } = req.query;
+
+    const filtre = { statut: 'active' };
+
+    if (ville)
+      filtre.ville = { $regex: ville, $options: 'i' }; // insensible à la casse
+
+    if (typeLogement)
+      filtre.typeLogement = typeLogement;
+
+    if (prixMin || prixMax) {
+      filtre.prix = {};
+      if (prixMin) filtre.prix.$gte = Number(prixMin);
+      if (prixMax) filtre.prix.$lte = Number(prixMax);
+    }
+
+    if (surfaceMin || surfaceMax) {
+      filtre.surface = {};
+      if (surfaceMin) filtre.surface.$gte = Number(surfaceMin);
+      if (surfaceMax) filtre.surface.$lte = Number(surfaceMax);
+    }
+
+    if (disponibleAvant || disponibleApres) {
+      filtre.dateDisponibilite = {};
+      if (disponibleApres) filtre.dateDisponibilite.$gte = new Date(disponibleApres);
+      if (disponibleAvant) filtre.dateDisponibilite.$lte = new Date(disponibleAvant);
+    }
+
+   const annonces = await Annonce.find(filtre)
+      .populate('proprietaire', 'nom email')
+      .sort({ createdAt: -1 });
+
+    // ✅ Remplacez res.status(200).json par ceci :
+    if (annonces.length === 0) {
+      return res.status(404).json({
+        message: 'Aucune annonce trouvée pour ces critères de recherche',
+        criteres: req.query,
+      });
+    }
+
+    res.status(200).json({
+      message: `${annonces.length} annonce(s) trouvée(s)`,
+      total: annonces.length,
+      annonces,
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
+};
