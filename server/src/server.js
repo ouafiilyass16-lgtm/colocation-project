@@ -21,6 +21,8 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/annonces", annonceRoutes);
 
 app.use("/api/favoris", favoriRoutes);
+const messageRoutes = require('./routes/messageRoutes');
+app.use('/api/messages', messageRoutes);
 
 const PORT = process.env.PORT || 5000;
 
