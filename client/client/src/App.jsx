@@ -1,125 +1,112 @@
-<<<<<<< HEAD:frontend/src/App.jsx
-=======
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, createContext, useContext, useEffect } from "react";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/Home";
+import AnnonceDetail from "./pages/AnnonceDetail";
+import CreateAnnonce from "./pages/CreateAnnonce";
+import MesAnnonces from "./pages/MesAnnonces";
+import Favoris from "./pages/Favoris";
+import Messages from "./pages/Messages";
+import Profile from "./pages/Profile";
+import AdminPanel from "./pages/AdminPanel";
+import Navbar from "./components/Navbar";
 
-function App() {
-  const [count, setCount] = useState(0)
+export const AuthContext = createContext(null);
+export const useAuth = () => useContext(AuthContext);
+
+const API = "http://localhost:5000/api";
+
+export const api = {
+  get: (path, token) =>
+    fetch(`${API}${path}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    }).then((r) => r.json()),
+  post: (path, body, token) =>
+    fetch(`${API}${path}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(body),
+    }).then((r) => r.json()),
+  put: (path, body, token) =>
+    fetch(`${API}${path}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    }).then((r) => r.json()),
+  patch: (path, body, token) =>
+    fetch(`${API}${path}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    }).then((r) => r.json()),
+  delete: (path, token) =>
+    fetch(`${API}${path}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    }).then((r) => r.json()),
+};
+
+export default function App() {
+  const [user, setUser] = useState(() => {
+    const stored = localStorage.getItem("user");
+    return stored ? JSON.parse(stored) : null;
+  });
+  const [token, setToken] = useState(() => localStorage.getItem("token") || null);
+  const [page, setPage] = useState("home");
+  const [pageParams, setPageParams] = useState(null);
+
+  const login = (userData, tok) => {
+    setUser(userData);
+    setToken(tok);
+    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("token", tok);
+    navigate("home");
+  };
+
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.clear();
+    navigate("home");
+  };
+
+  const navigate = (p, params = null) => {
+    setPage(p);
+    setPageParams(params);
+    window.scrollTo(0, 0);
+  };
+
+  const renderPage = () => {
+    switch (page) {
+      case "home": return <Home />;
+      case "login": return <Login />;
+      case "register": return <Register />;
+      case "annonce-detail": return <AnnonceDetail id={pageParams} />;
+      case "create-annonce": return <CreateAnnonce />;
+      case "mes-annonces": return <MesAnnonces />;
+      case "favoris": return <Favoris />;
+      case "messages": return <Messages />;
+      case "profile": return <Profile />;
+      case "admin": return <AdminPanel />;
+      default: return <Home />;
+    }
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <AuthContext.Provider value={{ user, token, login, logout, navigate, api }}>
+      <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
+        <Navbar />
+        <main>{renderPage()}</main>
+      </div>
+    </AuthContext.Provider>
+  );
 }
-
-export default App
->>>>>>> a87c373e09e532b9a3fe725c25fb85ac895edfc5:client/client/src/App.jsx
