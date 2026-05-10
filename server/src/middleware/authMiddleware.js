@@ -6,7 +6,6 @@ module.exports = function (req, res, next) {
   if (!token) {
     return res.status(401).json({ msg: "Accès refusé, token manquant" });
   }
-
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 

@@ -42,7 +42,7 @@ export default function AnnonceCard({ annonce, onFavori, isFavori, compact }) {
         e.currentTarget.style.boxShadow = "none";
       }}
     >
-      {/* Image placeholder */}
+      {/* Image */}
       <div style={{
         height: compact ? 120 : 180,
         background: `linear-gradient(135deg, var(--bg3) 0%, #1e2d45 100%)`,
@@ -51,7 +51,11 @@ export default function AnnonceCard({ annonce, onFavori, isFavori, compact }) {
         position: "relative",
       }}>
         {annonce.photos?.[0]?.url ? (
-          <img src={annonce.photos[0].url} alt={annonce.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img
+            src={annonce.photos[0].url}
+            alt={annonce.titre}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
         ) : (
           <span style={{ opacity: 0.4 }}>{typeIcons[annonce.typeLogement] || "🏠"}</span>
         )}
@@ -75,7 +79,7 @@ export default function AnnonceCard({ annonce, onFavori, isFavori, compact }) {
           </button>
         )}
 
-        {/* Status */}
+        {/* Status badge */}
         <div style={{ position: "absolute", bottom: 10, left: 10 }}>
           {statusBadge[annonce.statut]}
         </div>
@@ -83,24 +87,26 @@ export default function AnnonceCard({ annonce, onFavori, isFavori, compact }) {
 
       {/* Content */}
       <div style={{ padding: compact ? "14px" : "18px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 8 }}>
+        <div style={{
+          display: "flex", justifyContent: "space-between",
+          alignItems: "flex-start", gap: 8, marginBottom: 8,
+        }}>
           <h3 style={{
             fontFamily: "var(--font-display)",
             fontSize: compact ? 14 : 16,
-            fontWeight: 700,
-            lineHeight: 1.3,
+            fontWeight: 700, lineHeight: 1.3,
             color: "var(--text)",
           }}>
             {annonce.titre}
           </h3>
           <div style={{
             fontSize: compact ? 15 : 18,
-            fontWeight: 700,
-            color: "var(--accent)",
+            fontWeight: 700, color: "var(--accent)",
             fontFamily: "var(--font-display)",
             whiteSpace: "nowrap",
           }}>
-            {annonce.prix?.toLocaleString()} <span style={{ fontSize: 11, color: "var(--text3)" }}>MAD/mois</span>
+            {annonce.prix?.toLocaleString()}{" "}
+            <span style={{ fontSize: 11, color: "var(--text3)" }}>MAD/mois</span>
           </div>
         </div>
 
@@ -108,15 +114,17 @@ export default function AnnonceCard({ annonce, onFavori, isFavori, compact }) {
           <span>📍 {annonce.ville}</span>
           <span>·</span>
           <span>{typeIcons[annonce.typeLogement]} {annonce.typeLogement}</span>
-          {annonce.surface && (<><span>·</span><span>📐 {annonce.surface} m²</span></>)}
+          {annonce.surface && (
+            <><span>·</span><span>📐 {annonce.surface} m²</span></>
+          )}
         </div>
 
         {!compact && annonce.description && (
           <p style={{
             marginTop: 10,
-            fontSize: 13, color: "var(--text3)",
-            lineHeight: 1.5,
-            display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden",
+            fontSize: 13, color: "var(--text3)", lineHeight: 1.5,
+            display: "-webkit-box", WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical", overflow: "hidden",
           }}>
             {annonce.description}
           </p>

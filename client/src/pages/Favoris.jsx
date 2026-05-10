@@ -22,44 +22,58 @@ export default function Favoris() {
   };
 
   if (!user) return (
-    <div className="page container empty-state">
+    <div className="container empty-state" style={{ paddingTop: 80 }}>
       <div className="empty-icon">🔒</div>
       <h3>Connexion requise</h3>
-      <button className="btn btn-primary" onClick={() => navigate("login")} style={{ marginTop: 20 }}>Se connecter</button>
+      <button className="btn btn-primary btn-pill" onClick={() => navigate("login")} style={{ marginTop: 20 }}>
+        Se connecter
+      </button>
     </div>
   );
 
   return (
     <div className="page">
       <div className="container">
-        <h1 style={{ marginBottom: 8 }}>Mes favoris</h1>
-        <p style={{ color: "var(--text2)", marginBottom: 32, fontSize: 14 }}>
-          {favoris.length} annonce(s) sauvegardée(s)
-        </p>
+        <div style={{ marginBottom: 32 }}>
+          <h1 style={{ fontFamily: "'Fraunces', serif", marginBottom: 6 }}>Mes favoris</h1>
+          <p style={{ color: "#717171", fontSize: 14 }}>
+            {favoris.length} annonce{favoris.length > 1 ? "s" : ""} sauvegardée{favoris.length > 1 ? "s" : ""}
+          </p>
+        </div>
 
         {loading ? (
-          <div className="page-loading"><div className="spinner" style={{ width: 36, height: 36 }} /></div>
+          <div className="page-loading">
+            <div className="spinner" style={{ width: 36, height: 36 }} />
+          </div>
         ) : favoris.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">❤️</div>
             <h3>Aucun favori pour l'instant</h3>
             <p style={{ marginBottom: 20 }}>Sauvegardez des annonces qui vous intéressent</p>
-            <button className="btn btn-primary" onClick={() => navigate("home")}>Explorer les annonces</button>
+            <button className="btn btn-primary btn-pill" onClick={() => navigate("home")}>
+              Explorer les annonces
+            </button>
           </div>
         ) : (
-          <div className="grid-3">
-            {favoris.map((f) => {
+          <div className="listing-grid">
+            {favoris.map(f => {
               const annonce = f.annonce;
               if (!annonce?._id) return null;
               return (
                 <div key={f._id} style={{ position: "relative" }}>
                   <AnnonceCard annonce={annonce} />
                   <button
-                    className="btn btn-danger btn-sm"
                     onClick={() => removeFavori(annonce._id)}
-                    style={{ position: "absolute", top: 10, right: 10, zIndex: 10 }}
+                    style={{
+                      position: "absolute", top: 12, right: 12,
+                      background: "rgba(255,255,255,0.9)",
+                      border: "1px solid #DDDDDD",
+                      borderRadius: 100, padding: "4px 12px",
+                      fontSize: 12, fontWeight: 600, color: "#222",
+                      cursor: "pointer", zIndex: 10,
+                    }}
                   >
-                    ❤️ Retirer
+                    Retirer
                   </button>
                 </div>
               );
