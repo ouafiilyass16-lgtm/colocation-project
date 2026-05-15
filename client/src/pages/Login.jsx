@@ -1,20 +1,37 @@
 import { useState } from "react";
 import { useAuth } from "../App";
+import "../styles/Auth.css";
 
-function AuthLayout({ children, title, subtitle }) {
+// Importations des images
+import loginImage from "../styles/image.png";
+import mainLogo from "../styles/ChatGPT Image 14 mai 2026, 19_19_52.png";
+
+// Composant de mise en page partagé (Split Screen)
+function AuthLayout({ children, title, subtitle, sidebarTitle, sidebarText }) {
   return (
-    <div style={{
-      minHeight: "calc(100vh - 64px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      padding: 24,
-    }}>
-      <div style={{ width: "100%", maxWidth: 420 }}>
-        <div style={{ textAlign: "center", marginBottom: 36 }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }}>🏡</div>
-          <h1 style={{ fontSize: 28, marginBottom: 8 }}>{title}</h1>
-          <p style={{ color: "var(--text2)", fontSize: 15 }}>{subtitle}</p>
+    <div className="auth-container">
+      {/* SECTION GAUCHE : VISUEL ET TEXTE ANIME */}
+      <div 
+        className="auth-sidebar" 
+        style={{ backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.7)), url(${loginImage})` }}
+      >
+        <div className="auth-sidebar-content">
+          <h2 className="auth-sidebar-title">{sidebarTitle}</h2>
+          <p className="auth-sidebar-text">{sidebarText}</p>
         </div>
-        <div className="card" style={{ padding: 32 }}>
+      </div>
+
+      {/* SECTION DROITE : FORMULAIRE DANS LA BOITE AVEC OMBRES ET POINTILLÉS */}
+      <div className="auth-form-section">
+        <div className="auth-form-box">
+          {/* LOGO CENTRÉ AU MILIEU DU FORMULAIRE */}
+          <div className="logo-centered-container">
+            <img src={mainLogo} alt="LocaStudy Logo" className="logo-main-img" />
+          </div>
+          
+          <h1 className="auth-form-title">{title}</h1>
+          <p className="auth-form-subtitle">{subtitle}</p>
+          
           {children}
         </div>
       </div>
@@ -22,6 +39,7 @@ function AuthLayout({ children, title, subtitle }) {
   );
 }
 
+// COMPOSANT DE CONNEXION (LOGIN)
 export default function Login() {
   const { api, login, navigate } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
@@ -31,118 +49,141 @@ export default function Login() {
   const handleSubmit = async () => {
     if (!form.email || !form.password) { setError("Tous les champs sont requis"); return; }
     setLoading(true); setError("");
-    const data = await api.post("/auth/login", form);
-    setLoading(false);
-    if (data.token) {
-      login(data.user, data.token);
-    } else {
-      setError(data.msg || "Identifiants invalides");
+    try {
+      const data = await api.post("/auth/login", form);
+      setLoading(false);
+      if (data.token) login(data.user, data.token);
+      else setError(data.msg || "Email ou mot de passe incorrect");
+    } catch (err) {
+      setLoading(false);
+      setError("Erreur de connexion au serveur (Vérifiez votre Backend)");
     }
   };
 
   return (
-    <AuthLayout title="Bon retour" subtitle="Connectez-vous à votre compte">
-      {error && <div className="alert alert-error">{error}</div>}
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+    <AuthLayout 
+      title="Bon retour !" 
+      subtitle="Accédez à votre espace LocaStudy"
+      sidebarTitle="L'IMMOBILIER ÉTUDIANT, SIMPLIFIÉ."
+      sidebarText="Trouvez, visitez et louez votre futur logement en quelques clics."
+    >
+      {error && <div className="alert alert-error" style={{marginBottom: '15px'}}>{error}</div>}
+      
+      <div className="flex-column">
         <div className="form-group">
-          <label className="form-label">Email</label>
-          <input className="form-input" type="email" placeholder="vous@email.com"
-            value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
-            onKeyDown={e => e.key === "Enter" && handleSubmit()} />
+          <label className="form-label">Email professionnel ou étudiant</label>
+          <input className="form-input" type="email" placeholder="nom@exemple.com"
+            value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} />
         </div>
+        
         <div className="form-group">
           <label className="form-label">Mot de passe</label>
           <input className="form-input" type="password" placeholder="••••••••"
-            value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))}
-            onKeyDown={e => e.key === "Enter" && handleSubmit()} />
+            value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} />
         </div>
-        <button className="btn btn-primary w-full" style={{ marginTop: 8, justifyContent: "center" }}
-          onClick={handleSubmit} disabled={loading}>
-          {loading ? <><span className="spinner" />Connexion...</> : "Se connecter"}
+        
+        <button className="btn-auth" onClick={handleSubmit} disabled={loading}>
+          {loading ? "Connexion en cours..." : "Se connecter maintenant"}
         </button>
-        <p style={{ textAlign: "center", fontSize: 13, color: "var(--text3)" }}>
-          Pas encore inscrit ?{" "}
-          <span onClick={() => navigate("register")} style={{ color: "var(--accent)", cursor: "pointer" }}>
-            Créer un compte
-          </span>
-        </p>
+
+        <div className="auth-footer">
+          <p className="auth-footer-text">
+            Nouveau ici ? 
+            <span className="auth-link-action" onClick={() => navigate("register")}>
+              Créer un compte gratuitement
+            </span>
+          </p>
+        </div>
       </div>
     </AuthLayout>
   );
 }
 
+// COMPOSANT D'INSCRIPTION (REGISTER)
 export function Register() {
   const { api, navigate } = useAuth();
   const [form, setForm] = useState({ nom: "", email: "", password: "", role: "etudiant" });
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (!form.nom || !form.email || !form.password) { setError("Tous les champs sont requis"); return; }
-    if (form.password.length < 6) { setError("Le mot de passe doit faire au moins 6 caractères"); return; }
-    setLoading(true); setError(""); setSuccess("");
-    const data = await api.post("/auth/register", form);
-    setLoading(false);
-    if (data.msg === "Utilisateur enregistré avec succès") {
-      setSuccess("Compte créé ! Vous pouvez vous connecter.");
-      setTimeout(() => navigate("login"), 1500);
-    } else {
-      setError(data.msg || "Une erreur est survenue");
+    setLoading(true); setError("");
+    try {
+      const data = await api.post("/auth/register", form);
+      setLoading(false);
+      if (data.msg === "Utilisateur enregistré avec succès") navigate("login");
+      else setError(data.msg);
+    } catch (err) {
+      setLoading(false);
+      setError("Erreur de connexion au serveur");
     }
   };
 
   return (
-    <AuthLayout title="Créer un compte" subtitle="Rejoignez la communauté LocaStudy">
-      {error && <div className="alert alert-error">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+    <AuthLayout 
+      title="Créer un compte" 
+      subtitle="Rejoignez LocaStudy dès aujourd'hui."
+      sidebarTitle="REJOIGNEZ LA COMMUNAUTÉ LOCASTUDY"
+      sidebarText="Inscrivez-vous pour trouver votre logement idéal ou proposer vos biens."
+    >
+      {error && <div className="alert alert-error" style={{marginBottom: '15px'}}>{error}</div>}
+      
+      <div className="flex-column">
         <div className="form-group">
           <label className="form-label">Nom complet</label>
-          <input className="form-input" placeholder="Votre nom" value={form.nom}
+          <input className="form-input" placeholder="Prénom & Nom" value={form.nom}
             onChange={e => setForm(p => ({ ...p, nom: e.target.value }))} />
         </div>
+
         <div className="form-group">
           <label className="form-label">Email</label>
-          <input className="form-input" type="email" placeholder="vous@email.com" value={form.email}
+          <input className="form-input" type="email" placeholder="Email" value={form.email}
             onChange={e => setForm(p => ({ ...p, email: e.target.value }))} />
         </div>
+
         <div className="form-group">
           <label className="form-label">Mot de passe</label>
-          <input className="form-input" type="password" placeholder="Minimum 6 caractères" value={form.password}
+          <input className="form-input" type="password" placeholder="Mot de passe" value={form.password}
             onChange={e => setForm(p => ({ ...p, password: e.target.value }))} />
         </div>
+        
+        {/* SÉLECTEUR DE RÔLE STYLISÉ (CARTES INTERACTIVES) */}
         <div className="form-group">
-          <label className="form-label">Je suis</label>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-            {[
-              { value: "etudiant", label: "🎓 Étudiant", desc: "Je cherche un logement" },
-              { value: "proprietaire", label: "🏠 Propriétaire", desc: "Je loue un logement" },
-            ].map((r) => (
-              <div key={r.value}
-                onClick={() => setForm(p => ({ ...p, role: r.value }))}
-                style={{
-                  padding: "12px 14px", borderRadius: "var(--radius2)", cursor: "pointer",
-                  border: `1px solid ${form.role === r.value ? "var(--accent)" : "var(--border)"}`,
-                  background: form.role === r.value ? "rgba(79,142,247,0.1)" : "var(--bg3)",
-                  transition: "var(--transition)",
-                }}>
-                <div style={{ fontSize: 14, fontWeight: 600 }}>{r.label}</div>
-                <div style={{ fontSize: 11, color: "var(--text3)", marginTop: 2 }}>{r.desc}</div>
-              </div>
-            ))}
+          <label className="form-label">Je suis :</label>
+          <div className="role-selection-grid">
+            <div 
+              className={`role-card ${form.role === "etudiant" ? "active" : ""}`}
+              onClick={() => setForm(p => ({ ...p, role: "etudiant" }))}
+            >
+              <span className="role-card-icon">🎓</span>
+              <span className="role-card-label">Étudiant</span>
+              <span className="role-card-desc">Chercher</span>
+            </div>
+
+            <div 
+              className={`role-card ${form.role === "proprietaire" ? "active" : ""}`}
+              onClick={() => setForm(p => ({ ...p, role: "proprietaire" }))}
+            >
+              <span className="role-card-icon">🏠</span>
+              <span className="role-card-label">Propriétaire</span>
+              <span className="role-card-desc">Louer</span>
+            </div>
           </div>
         </div>
-        <button className="btn btn-primary w-full" style={{ justifyContent: "center", marginTop: 4 }}
-          onClick={handleSubmit} disabled={loading}>
-          {loading ? <><span className="spinner" />Création...</> : "Créer mon compte"}
+
+        <button className="btn-auth" onClick={handleSubmit} disabled={loading}>
+          {loading ? "Création..." : "S'inscrire gratuitement"}
         </button>
-        <p style={{ textAlign: "center", fontSize: 13, color: "var(--text3)" }}>
-          Déjà inscrit ?{" "}
-          <span onClick={() => navigate("login")} style={{ color: "var(--accent)", cursor: "pointer" }}>
-            Se connecter
-          </span>
-        </p>
+
+        <div className="auth-footer">
+          <p className="auth-footer-text">
+            Déjà membre ? 
+            <span className="auth-link-action" onClick={() => navigate("login")}>
+              Se connecter
+            </span>
+          </p>
+        </div>
       </div>
     </AuthLayout>
   );

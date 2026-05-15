@@ -1,0 +1,158 @@
+.chat-container-prestige {
+    height: calc(100vh - 100px); /* Ajusté pour laisser de la place à la Navbar */
+    padding: 10px 20px;
+    background: #f0f2f5;
+    overflow: hidden; /* Empêche le scroll de toute la page */
+}
+
+/* 2. Fixez la hauteur de la fenêtre de chat */
+.chat-window {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    height: 100%; /* Prend toute la hauteur du container-prestige */
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* 3. Forcez la zone de messages à scroller */
+.chat-messages {
+    flex: 1; 
+    overflow-y: auto; /* Active le scroll */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #e5ddd5; /* Fond beige WhatsApp */
+    max-height: 100%; /* Important pour limiter la croissance */
+}
+
+/* Sidebar */
+.chat-sidebar {
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header { padding: 20px; border-bottom: 1px solid #f1f5f9; }
+.sidebar-header h3 { font-family: 'Fraunces', serif; color: #0f172a; }
+
+.conv-list { overflow-y: auto; flex: 1; }
+.conv-item {
+    display: flex; gap: 15px; padding: 15px 20px;
+    cursor: pointer; transition: 0.2s; border-bottom: 1px solid #f8fafc;
+}
+.conv-item:hover { background: #f8fafc; }
+.conv-item.active { background: #f0f4ff; border-left: 4px solid #d4b996; }
+
+.avatar-small {
+    width: 45px; height: 45px; border-radius: 50%;
+    background: #0f172a; color: #d4b996;
+    display: flex; align-items: center; justify-content: center; font-weight: bold;
+}
+
+/* Chat Main */
+.chat-main { display: flex; flex-direction: column; background: #e5ddd5; } /* Fond beige WhatsApp */
+
+.chat-header {
+    background: #f0f2f5; padding: 15px 25px;
+    display: flex; align-items: center; border-bottom: 1px solid #e2e8f0;
+}
+.user-name { display: block; font-weight: 800; color: #0f172a; }
+.annonce-ref { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+
+/* Bulles de message */
+.chat-messages {
+    flex: 1; overflow-y: auto; padding: 20px;
+    display: flex; flex-direction: column; gap: 10px;
+}
+
+.message-bubble {
+    max-width: 70%; padding: 10px 15px;
+    border-radius: 12px; font-size: 14px; line-height: 1.5;
+    position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.message-bubble.sent {
+    align-self: flex-end;
+    background: #dcf8c6; /* Vert WhatsApp */
+    color: #0f172a;
+    border-top-right-radius: 2px;
+}
+
+.message-bubble.received {
+    align-self: flex-start;
+    background: white;
+    color: #0f172a;
+    border-top-left-radius: 2px;
+}
+
+.msg-time {
+    display: block; font-size: 10px; text-align: right;
+    margin-top: 5px; opacity: 0.5;
+}
+
+/* Input Area */
+.chat-input-area {
+    padding: 15px 20px; background: #f0f2f5;
+    display: flex; gap: 15px; align-items: center;
+}
+.chat-input-area input {
+    flex: 1; padding: 12px 20px; border-radius: 25px;
+    border: none; outline: none; font-size: 14px;
+}
+.btn-chat-send {
+    background: #0f172a; color: #d4b996;
+    border: none; width: 45px; height: 45px;
+    border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+}
+/* ... Gardez votre CSS précédent et ajoutez/modifiez ceci ... */
+
+.msg-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.msg-time {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.read-status {
+  font-size: 14px;
+  line-height: 1;
+  color: #94a3b8; /* Gris par défaut */
+  letter-spacing: -2px;
+}
+
+.read-status.is-read {
+  color: #D4B996; /* Gold quand lu (au lieu du bleu WhatsApp) */
+  font-weight: bold;
+}
+
+/* Ajustement des bulles pour laisser de la place aux infos */
+.message-bubble {
+    max-width: 75%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.message-bubble.sent {
+    align-self: flex-end;
+    background: #dcf8c6; 
+    border-top-right-radius: 2px;
+}
+
+.message-bubble.received {
+    align-self: flex-start;
+    background: white;
+    border-top-left-radius: 2px;
+}

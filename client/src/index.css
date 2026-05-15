@@ -1,49 +1,276 @@
-@import url('https://fonts.googleapis.com/css2?family=Circular+Std:wght@400;500;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap');
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=DM+Sans:wght@400;500;700&display=swap');
 
 :root {
-  /* ── Airbnb-inspired palette ── */
-  --bg:        #FFFFFF;
-  --bg2:       #F7F7F7;
-  --bg3:       #EBEBEB;
-  --surface:   #FFFFFF;
-  --border:    #DDDDDD;
-  --border2:   #B0B0B0;
+  /* Palette Signature : Or Sablé, Anthracite et Blanc Cassé */
+  --skyline-gold: #967b4c;
+  --skyline-gold-light: #b59a6d;
+  --skyline-dark: #1a1a1a;
+  --skyline-text: #2c2c2c;
+  --skyline-gray: #f4f1ea; /* Teinte sable très légère pour le fond */
+  --font-display: 'Fraunces', serif;
+  --font-body: 'DM Sans', sans-serif;
+}
 
-  --text:      #222222;
-  --text2:     #484848;
-  --text3:     #717171;
-  --text4:     #B0B0B0;
+/* --- Global --- */
+body {
+  background-color: var(--skyline-gray);
+  color: var(--skyline-text);
+  font-family: var(--font-body);
+}
 
-  /* Airbnb coral/rose */
-  --accent:    #FF385C;
-  --accent2:   #E31C5F;
-  --accent3:   #FF5A5F;
-  --accent-soft: rgba(255,56,92,0.08);
+/* --- NAVBAR HARMONISÉE --- */
+.navbar {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid rgba(150, 123, 76, 0.2);
+  backdrop-filter: blur(10px);
+}
 
-  --danger:    #C13515;
-  --success:   #008A05;
-  --warning:   #B56E00;
+.nav-link {
+  color: var(--skyline-dark) !important;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
 
-  --card:      #FFFFFF;
-  --overlay:   rgba(34,34,34,0.45);
+.nav-link:hover {
+  color: var(--skyline-gold) !important;
+}
 
-  --radius:    12px;
-  --radius2:   8px;
-  --radius3:   24px;
-  --radius-pill: 100px;
+/* --- HERO SECTION (Image Étudiante/Luxe) --- */
+.skyline-hero {
+  height: 80vh;
+  /* Image d'une bibliothèque moderne ou résidence étudiante haut de gamme */
+  background-image: linear-gradient(rgba(26, 26, 26, 0.4), rgba(26, 26, 26, 0.4)), 
+                    url('https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1600&q=80');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
 
-  --shadow:    0 1px 2px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
-  --shadow2:   0 6px 20px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
-  --shadow3:   0 24px 48px rgba(0,0,0,0.16), 0 6px 16px rgba(0,0,0,0.12);
-  --transition: all 0.2s ease;
+/* --- ANNONCE CARDS (Nouveau Look) --- */
+.listing-card {
+  background: white;
+  border: 1px solid rgba(150, 123, 76, 0.15);
+  border-radius: 4px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
 
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-body:    'DM Sans', system-ui, sans-serif;
+.listing-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(150, 123, 76, 0.1);
+  border-color: var(--skyline-gold);
+}
 
-  --navbar-height: 80px;
+.listing-card__img-wrap {
+  height: 220px;
+  position: relative;
+}
+
+.listing-card__price {
+  font-family: var(--font-display);
+  color: var(--skyline-gold);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.listing-card__title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--skyline-dark);
+  margin-bottom: 8px;
+}
+
+.listing-card__badge {
+  background: var(--skyline-gold);
+  color: white;
+  padding: 4px 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* --- BARRE DE RECHERCHE --- */
+.skyline-search-container {
+  background: white;
+  border-bottom: 4px solid var(--skyline-gold);
+  border-radius: 2px;
+}
+
+.skyline-btn {
+  background: var(--skyline-gold);
+  transition: background 0.3s ease;
+}
+
+.skyline-btn:hover {
+  background: var(--skyline-dark);
+}
+/* --- BARRE DE RECHERCHE DOUCE & ÉLÉGANTE --- */
+
+.skyline-search-container {
+  background: #ffffff;
+  display: flex;
+  width: 92%;
+  max-width: 1100px;
+  /* Ombre plus douce et plus large pour un effet "cloud" */
+  box-shadow: 0 10px 40px rgba(150, 123, 76, 0.12); 
+  /* Arrondi léger pour casser la rigidité sans perdre le côté premium */
+  border-radius: 12px; 
+  overflow: hidden;
+  margin: -40px auto 0; /* Pour qu'elle chevauche légèrement le hero */
+  position: relative;
+  z-index: 10;
+  border: 1px solid rgba(150, 123, 76, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skyline-search-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 50px rgba(150, 123, 76, 0.18);
+}
+
+.search-field-group {
+  flex: 1;
+  padding: 22px 30px;
+  border-right: 1px solid rgba(150, 123, 76, 0.1);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+/* Effet au survol d'un champ spécifique */
+.search-field-group:hover {
+  background: rgba(1, 2, 29, 0.4); /* --skyline-gray très léger */
+}
+
+.search-field-group:last-of-type {
+  border-right: none;
+}
+
+.search-field-group label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--skyline-gold); /* Label en doré pour plus de douceur que le gris */
+  margin-bottom: 6px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.search-field-group input, 
+.search-field-group select {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 16px;
+  font-family: var(--font-body); /* Passage en DM Sans pour plus de modernité */
+  color: var(--skyline-dark);
+  background: transparent;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.search-field-group input::placeholder {
+  color: #bbb;
+  font-weight: 400;
+}
+
+/* --- BOUTON DE RECHERCHE AFFINÉ --- */
+.skyline-btn {
+  background: var(--skyline-gold);
+  color: #ffffff;
+  border: none;
+  padding: 0 50px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.skyline-btn:hover {
+  background: var(--skyline-dark);
+  color: var(--skyline-gold);
+  padding: 0 55px; /* Petit effet d'élargissement */
+}
+
+/* Ajustement pour mobile pour garder la douceur */
+@media (max-width: 850px) {
+  .skyline-search-container {
+    flex-direction: column;
+    border-radius: 15px;
+    margin-top: 20px;
+  }
+  .search-field-group {
+    border-right: none;
+    border-bottom: 1px solid rgba(150, 123, 76, 0.1);
+    padding: 15px 25px;
+  }
+  .skyline-btn {
+    padding: 20px;
+    font-size: 14px;
+  }
+}
+
+/* 5. TITRES DE SECTIONS (Nos Chambres / Logements) */
+.section-intro {
+  text-align: center;
+  margin: 80px 0 50px;
+}
+
+.section-intro h2 {
+  font-family: var(--font-display);
+  font-size: 38px;
+  color: var(--skyline-dark);
+  font-weight: 400;
+  margin-bottom: 15px;
+}
+
+.gold-divider {
+  width: 50px;
+  height: 2px;
+  background: var(--skyline-gold);
+  margin: 0 auto 25px;
+}
+
+.section-intro p {
+  color: #666;
+  font-family: var(--font-body);
+  font-size: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* 6. ADAPTATION MOBILE */
+@media (max-width: 850px) {
+  .skyline-search-container {
+    flex-direction: column;
+    width: 95%;
+  }
+  .search-field-group {
+    border-right: none;
+    border-bottom: 1px solid #eee;
+  }
+  .skyline-btn {
+    padding: 20px;
+  }
 }
 
 /* ── Base ── */

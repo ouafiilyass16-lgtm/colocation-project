@@ -1,5 +1,32 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../App";
+import "../styles/Profile.css";
+
+const roleConfig = {
+  etudiant: {
+    icon: "🎓", label: "Étudiant",
+    color: "#D4B996", bg: "rgba(15, 23, 42, 0.05)",
+    fields: [
+      { key: "universite",    label: "Université",            placeholder: "ENSA, ENSIAS...",        icon: "🏫" },
+      { key: "niveauEtude",   label: "Niveau d'étude",        placeholder: "Licence, Master...",     icon: "📚" },
+      { key: "villeRecherche",label: "Ville recherchée",      placeholder: "Casablanca...",          icon: "📍" },
+      { key: "budgetMax",     label: "Budget max (MAD/mois)", placeholder: "3000", type: "number",   icon: "💰" },
+    ],
+  },
+  proprietaire: {
+    icon: "🏠", label: "Propriétaire",
+    color: "#D4B996", bg: "rgba(15, 23, 42, 0.05)",
+    fields: [
+      { key: "telephone", label: "Téléphone", placeholder: "+212 6XX XXX XXX", icon: "📞" },
+      { key: "adresse",   label: "Adresse",   placeholder: "123 Rue Mohammed V, Casablanca", icon: "🏠" },
+    ],
+  },
+  admin: {
+    icon: "🛡️", label: "Administrateur",
+    color: "#D4B996", bg: "#0F172A",
+    fields: [],
+  },
+};
 
 export default function Profile() {
   const { api, token, user, navigate } = useAuth();
@@ -15,266 +42,165 @@ export default function Profile() {
 
   const loadProfile = async () => {
     setLoading(true);
-    const data = await api.get("/profile", token);
-    setProfile(data);
-    const profileData =
-      data.role === "etudiant" ? (data.etudiantProfile || {}) :
-      data.role === "proprietaire" ? (data.proprietaireProfile || {}) : {};
-    setForm(profileData);
-    setSaved(profileData);
+    try {
+      const data = await api.get("/profile", token);
+      setProfile(data);
+      const profileData =
+        data.role === "etudiant" ? (data.etudiantProfile || {}) :
+        data.role === "proprietaire" ? (data.proprietaireProfile || {}) : {};
+      setForm(profileData);
+      setSaved(profileData);
+    } catch (err) {
+      console.error("Erreur chargement profil");
+    }
     setLoading(false);
   };
 
   const handleSave = async () => {
-    setSaving(true); setMsg("");
-    const endpoints = {
-      etudiant: "/profile/etudiant",
-      proprietaire: "/profile/proprietaire",
-      admin: "/profile/admin",
-    };
-    const data = await api.put(endpoints[user.role], form, token);
-    setSaving(false);
-    if (data._id) {
-      setSaved({ ...form });   // mise à jour temps réel
-      setMsg("success");
-      setEditing(false);
-      setTimeout(() => setMsg(""), 3000);
-    } else {
+    setSaving(true); 
+    setMsg("");
+    try {
+      const endpoints = {
+        etudiant: "/profile/etudiant",
+        proprietaire: "/profile/proprietaire",
+        admin: "/profile/admin",
+      };
+      
+      const data = await api.put(endpoints[user.role], form, token);
+      
+      if (data && (data._id || data.success)) {
+        setSaved({ ...form });
+        setMsg("success");
+        setEditing(false);
+        // On attend un peu pour laisser l'utilisateur voir le succès
+        setTimeout(() => setMsg(""), 3000);
+      } else {
+        setMsg("error");
+      }
+    } catch (err) {
       setMsg("error");
     }
+    setSaving(false);
   };
 
   const handleCancel = () => {
-    setForm({ ...saved }); // reset vers les données sauvegardées
+    setForm({ ...saved });
     setEditing(false);
     setMsg("");
   };
 
   if (!user) return (
-    <div className="container empty-state" style={{ paddingTop: 80 }}>
-      <div className="empty-icon">🔒</div>
-      <h3>Connexion requise</h3>
-      <button className="btn btn-primary btn-pill" onClick={() => navigate("login")} style={{ marginTop: 20 }}>
+    <div className="empty-state-prestige">
+      <div className="empty-icon-box">🔒</div>
+      <h3>Accès restreint</h3>
+      <p>Veuillez vous connecter pour gérer votre profil.</p>
+      <button className="btn-prestige-gold" onClick={() => navigate("login")}>
         Se connecter
       </button>
     </div>
   );
 
-  const roleConfig = {
-    etudiant: {
-      icon: "🎓", label: "Étudiant",
-      color: "#4A7C6B", bg: "rgba(74,124,107,0.08)",
-      fields: [
-        { key: "universite",    label: "Université",            placeholder: "ENSA, ENSIAS...",        icon: "🏫" },
-        { key: "niveauEtude",   label: "Niveau d'étude",        placeholder: "Licence, Master...",     icon: "📚" },
-        { key: "villeRecherche",label: "Ville recherchée",      placeholder: "Casablanca...",          icon: "📍" },
-        { key: "budgetMax",     label: "Budget max (MAD/mois)", placeholder: "3000", type: "number",   icon: "💰" },
-      ],
-    },
-    proprietaire: {
-      icon: "🏠", label: "Propriétaire",
-      color: "#FF385C", bg: "rgba(255,56,92,0.08)",
-      fields: [
-        { key: "telephone", label: "Téléphone", placeholder: "+212 6XX XXX XXX", icon: "📞" },
-        { key: "adresse",   label: "Adresse",   placeholder: "123 Rue Mohammed V, Casablanca", icon: "🏠" },
-      ],
-    },
-    admin: {
-      icon: "⚙️", label: "Administrateur",
-      color: "#B56E00", bg: "rgba(181,110,0,0.08)",
-      fields: [],
-    },
-  };
-
   const config = roleConfig[user.role] || roleConfig.etudiant;
 
   return (
-    <div className="page">
-      <div className="container" style={{ maxWidth: 640 }}>
-        <h1 style={{ fontFamily: "'Fraunces', serif", marginBottom: 32 }}>Mon profil</h1>
-
+    <div className="profile-wrapper-prestige">
+      <div className="container">
+        
         {loading ? (
-          <div className="page-loading"><div className="spinner" style={{ width: 32, height: 32 }} /></div>
+          <div className="page-loading"><div className="spinner" /></div>
         ) : (
-          <>
-            {/* ── Avatar card ── */}
-            <div style={{
-              background: "#fff", border: "1px solid #DDDDDD",
-              borderRadius: 20, padding: 28, marginBottom: 16,
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                <div style={{
-                  width: 80, height: 80, borderRadius: "50%",
-                  background: "linear-gradient(135deg, #FF385C, #E31C5F)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 30, fontWeight: 800, color: "#fff", flexShrink: 0,
-                }}>
+          <div className="profile-layout">
+            
+            {/* ── HEADER PROFIL ── */}
+            <header className="profile-hero-card">
+              <div className="profile-hero-content">
+                <div className="avatar-huge">
                   {user.nom?.[0]?.toUpperCase()}
+                  <div className="avatar-badge">{config.icon}</div>
                 </div>
-                <div style={{ flex: 1 }}>
-                  <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 24, marginBottom: 6 }}>
-                    {user.nom}
-                  </h2>
-                  <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-                    <span style={{ fontSize: 14, color: "#717171" }}>{user.email || profile?.email}</span>
-                    <span style={{
-                      display: "inline-flex", alignItems: "center", gap: 5,
-                      background: config.bg, color: config.color,
-                      padding: "4px 12px", borderRadius: 100, fontSize: 12, fontWeight: 700,
-                    }}>
-                      {config.icon} {config.label}
-                    </span>
-                  </div>
-
-                  {user.role === "proprietaire" && profile?.proprietaireProfile && (
-                    <div style={{ display: "flex", gap: 16, marginTop: 12 }}>
-                      <div style={{ fontSize: 13, color: "#717171" }}>
-                        <strong style={{ color: "#222" }}>{profile.proprietaireProfile.nbAnnonces || 0}</strong> annonce(s)
-                      </div>
-                      <div style={{ fontSize: 13, color: profile.proprietaireProfile.verifie ? "#008A05" : "#717171" }}>
-                        {profile.proprietaireProfile.verifie ? "✓ Compte vérifié" : "Non vérifié"}
-                      </div>
-                    </div>
-                  )}
+                <div className="profile-hero-text">
+                  <h1 className="fraunces-title">{user.nom}</h1>
+                  <p className="profile-email">{user.email}</p>
+                  <span className="role-badge-prestige" style={{ background: config.bg, color: config.color }}>
+                    {config.label}
+                  </span>
                 </div>
               </div>
-            </div>
+            </header>
 
-            {/* ── Infos card ── */}
-            {config.fields.length > 0 && (
-              <div style={{
-                background: "#fff", border: "1px solid #DDDDDD",
-                borderRadius: 20, padding: 28, marginBottom: 16,
-              }}>
+            <div className="profile-sections-grid">
+              
+              {/* ── SECTION INFORMATIONS ── */}
+              {config.fields.length > 0 && (
+                <section className="profile-section-card">
+                  <div className="section-header-flex">
+                    <h3 className="section-title-prestige">Informations Personnelles</h3>
+                    {!editing && (
+                      <button onClick={() => setEditing(true)} className="btn-edit-prestige">
+                        <span>✏️</span> Modifier le profil
+                      </button>
+                    )}
+                  </div>
 
-                {/* Header */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-                  <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 18, color: "#222" }}>
-                    Informations du profil
-                  </h3>
-                  {!editing && (
-                    <button
-                      onClick={() => setEditing(true)}
-                      style={{
-                        background: "none",
-                        border: "1.5px solid #DDDDDD",
-                        borderRadius: 100,
-                        padding: "7px 18px",
-                        fontSize: 13, fontWeight: 600,
-                        color: "#222", cursor: "pointer",
-                        display: "flex", alignItems: "center", gap: 6,
-                        transition: "all 0.15s",
-                      }}
-                      onMouseOver={e => { e.currentTarget.style.borderColor = "#222"; e.currentTarget.style.background = "#F7F7F7"; }}
-                      onMouseOut={e => { e.currentTarget.style.borderColor = "#DDDDDD"; e.currentTarget.style.background = "none"; }}
-                    >
-                      ✏️ Modifier
-                    </button>
-                  )}
-                </div>
+                  {msg === "success" && <div className="alert-prestige success">✓ Vos modifications ont été enregistrées avec succès.</div>}
+                  {msg === "error" && <div className="alert-prestige error">⚠️ Une erreur est survenue lors de l'enregistrement.</div>}
 
-                {msg === "success" && (
-                  <div className="alert alert-success" style={{ marginBottom: 20 }}>✓ Profil mis à jour avec succès !</div>
-                )}
-                {msg === "error" && (
-                  <div className="alert alert-error" style={{ marginBottom: 20 }}>Erreur lors de la mise à jour</div>
-                )}
-
-                {/* ── MODE LECTURE ── */}
-                {!editing && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-                    {config.fields.map((f, i) => (
-                      <div
-                        key={f.key}
-                        style={{
-                          display: "flex", alignItems: "center",
-                          justifyContent: "space-between",
-                          padding: "16px 0",
-                          borderBottom: i < config.fields.length - 1 ? "1px solid #F0F0F0" : "none",
-                        }}
-                      >
-                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <span style={{ fontSize: 18 }}>{f.icon}</span>
-                          <span style={{ fontSize: 14, fontWeight: 600, color: "#484848" }}>{f.label}</span>
+                  {!editing ? (
+                    <div className="info-display-grid">
+                      {config.fields.map((f) => (
+                        <div key={f.key} className="info-item-prestige">
+                          <label>{f.icon} {f.label}</label>
+                          <div className={`info-value ${!saved[f.key] ? 'is-empty' : ''}`}>
+                            {saved[f.key] 
+                              ? (f.key === "budgetMax" ? `${Number(saved[f.key]).toLocaleString()} MAD / mois` : saved[f.key])
+                              : "Non renseigné"}
+                          </div>
                         </div>
-                        <span style={{
-                          fontSize: 14,
-                          color: saved[f.key] ? "#222" : "#B0B0B0",
-                          fontWeight: saved[f.key] ? 500 : 400,
-                          maxWidth: 260, textAlign: "right",
-                        }}>
-                          {saved[f.key]
-                            ? (f.key === "budgetMax" ? `${Number(saved[f.key]).toLocaleString()} MAD/mois` : saved[f.key])
-                            : "Non renseigné"}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* ── MODE ÉDITION ── */}
-                {editing && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                    {config.fields.map(f => (
-                      <div key={f.key} className="form-group">
-                        <label className="form-label">
-                          {f.icon} {f.label}
-                        </label>
-                        <input
-                          className="form-input"
-                          type={f.type || "text"}
-                          placeholder={f.placeholder}
-                          value={form[f.key] || ""}
-                          onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
-                          autoFocus={f.key === config.fields[0].key}
-                        />
-                      </div>
-                    ))}
-
-                    {/* Boutons */}
-                    <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-                      <button
-                        className="btn btn-primary btn-pill"
-                        onClick={handleSave}
-                        disabled={saving}
-                      >
-                        {saving
-                          ? <><span className="spinner" /> Sauvegarde...</>
-                          : "✓ Enregistrer"}
-                      </button>
-                      <button
-                        className="btn btn-secondary btn-pill"
-                        onClick={handleCancel}
-                        disabled={saving}
-                      >
-                        Annuler
-                      </button>
+                      ))}
                     </div>
-                  </div>
-                )}
-              </div>
-            )}
+                  ) : (
+                    <div className="form-edit-prestige">
+                      <div className="form-grid-2">
+                        {config.fields.map(f => (
+                          <div key={f.key} className="form-group-prestige">
+                            <label>{f.icon} {f.label}</label>
+                            <input
+                              type={f.type || "text"}
+                              placeholder={f.placeholder}
+                              value={form[f.key] || ""}
+                              onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="form-actions-prestige">
+                        {/* BOUTON DE VALIDATION */}
+                        <button className="btn-save-prestige" onClick={handleSave} disabled={saving}>
+                          {saving ? "Enregistrement..." : "Confirmer les modifications"}
+                        </button>
+                        <button className="btn-cancel-prestige" onClick={handleCancel}>Annuler</button>
+                      </div>
+                    </div>
+                  )}
+                </section>
+              )}
 
-            {/* ── Admin panel link ── */}
-            {user.role === "admin" && (
-              <div style={{ background: "#fff", border: "1px solid #DDDDDD", borderRadius: 20, padding: 28 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-                  <div style={{
-                    width: 40, height: 40, borderRadius: 10,
-                    background: "rgba(181,110,0,0.1)",
-                    display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18,
-                  }}>⚙️</div>
-                  <div>
-                    <div style={{ fontWeight: 600, fontSize: 16, color: "#222" }}>Panneau d'administration</div>
-                    <div style={{ fontSize: 13, color: "#717171" }}>Accès complet à la plateforme</div>
+              {/* ── ACCÈS ADMIN (Si applicable) ── */}
+              {user.role === "admin" && (
+                <section className="profile-section-card admin-special">
+                  <div className="admin-cta-flex">
+                    <div className="admin-cta-text">
+                      <h3 className="section-title-prestige white">Contrôle Administrateur</h3>
+                      <p>Gérez les annonces en attente et les utilisateurs de la plateforme.</p>
+                    </div>
+                    <button className="btn-admin-go" onClick={() => navigate("admin")}>
+                      Ouvrir le Panel 🛡️
+                    </button>
                   </div>
-                </div>
-                <button className="btn btn-primary btn-pill" onClick={() => navigate("admin")}>
-                  Accéder au panneau admin
-                </button>
-              </div>
-            )}
-          </>
+                </section>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>

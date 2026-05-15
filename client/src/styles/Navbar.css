@@ -1,0 +1,343 @@
+/* src/styles/Navbar.css */
+
+.navbar-container {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  height: 72px;
+  background: var(--color-navbar-bg, #ffffff);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+/* Effet au scroll */
+.navbar-container.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+  height: 64px; /* On réduit légèrement la hauteur au scroll */
+}
+
+.navbar-content {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* --- LOGO STYLE (Identique au Login) --- */
+/* --- LOGO STYLE ÉPURÉ --- */
+.nav-logo {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+}
+
+.nav-logo-img {
+  width: 60px;
+  height: auto;
+  /* On enlève tout contour ou ombre ici */
+  filter: none; 
+}
+
+.nav-logo-text {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #0F172A; /* Bleu Marine */
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+/* Style spécifique pour le mot Study */
+.logo-study {
+  position: relative;
+  color: #0F172A; /* Garde la même couleur que Loca */
+}
+
+/* Le soulignement beige sur udy */
+.logo-udy-accent {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-udy-accent::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; /* Ajuste la hauteur du trait */
+  left: 0;
+  width: 100%;
+  height: 3px; /* Épaisseur du trait */
+  background-color: #D4B996; /* Ton Beige */
+  border-radius: 2px;
+}
+
+/* --- LINKS --- */
+.nav-links-desktop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-link-item {
+  background: none;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748B;
+  padding: 8px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-link-item:hover {
+  color: #0F172A;
+  background: rgba(212, 185, 150, 0.1);
+}
+
+.nav-link-item.active {
+  color: #0F172A;
+  background: rgba(15, 23, 42, 0.05);
+}
+
+.nav-link-dot {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: #D4B996;
+  border-radius: 50%;
+}
+
+/* --- USER ACTIONS --- */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Le bouton Publier avec le style "Sketch" */
+.btn-publish {
+  background: white;
+  border: 1.5px dashed #0F172A;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #0F172A;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 3px 3px 0px rgba(212, 185, 150, 0.3);
+}
+
+.btn-publish:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0px rgba(212, 185, 150, 0.4);
+}
+
+.user-drop-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 50px;
+  padding: 5px 6px 5px 14px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-drop-btn:hover {
+  border-color: #D4B996;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+.avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0F172A, #1e293b);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .nav-links-desktop { display: none; }
+}
+/* BOUTON UTILISATEUR (Le déclencheur) */
+.user-drop-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1.5px solid rgba(15, 23, 42, 0.08); /* Bordure très discrète */
+  padding: 6px 8px 6px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 2px 2px 0px rgba(212, 185, 150, 0.05);
+}
+
+.user-drop-btn:hover {
+  border-color: #D4B996; /* Beige au survol */
+  box-shadow: 4px 4px 0px rgba(15, 23, 42, 0.05);
+  transform: translateY(-1px);
+}
+
+.avatar-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #0F172A; /* Bleu Marine */
+  color: #D4B996;      /* Beige pour l'initiale */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  border: 1.5px solid #D4B996; /* Petit cercle beige autour */
+}
+
+/* MENU DÉROULANT (Le Dropdown) */
+.dropdown-menu-custom {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: #ffffff;
+  min-width: 240px;
+  border-radius: 20px;
+  border: 2px solid #0F172A; /* Style "Sketch" comme le login */
+  box-shadow: 8px 8px 0px rgba(212, 185, 150, 0.2); /* Shadow beige */
+  overflow: hidden;
+  animation: fadeInDown 0.2s ease-out;
+  z-index: 1000;
+}
+
+.dropdown-header {
+  padding: 16px 20px;
+  background: rgba(15, 23, 42, 0.02);
+  border-bottom: 1px dashed rgba(15, 23, 42, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-header strong {
+  color: #0F172A;
+  font-size: 15px;
+}
+
+.user-role-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #D4B996;
+  margin-top: 4px;
+}
+
+/* ITEMS DU MENU */
+.drop-item {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 12px 20px;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.drop-item:hover {
+  background: rgba(212, 185, 150, 0.1);
+  color: #0F172A;
+  padding-left: 24px; /* Petit effet de glissement */
+}
+
+.drop-item.accent {
+  color: #ef4444; /* Rouge pour la déconnexion */
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* --- BOUTONS AUTH DANS LA NAVBAR (DÉCONNECTÉ) --- */
+
+.auth-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.03); /* Un fond très léger pour regrouper les boutons */
+  padding: 5px;
+  border-radius: 50px;
+  border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+/* Style commun pour les deux boutons */
+.nav-link-item, .btn-auth-nav {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: none;
+}
+
+/* Bouton Connexion (Transparent / Discret) */
+.nav-link-item {
+  background: transparent;
+  color: #64748B;
+}
+
+.nav-link-item:hover {
+  color: #0F172A;
+  background: rgba(212, 185, 150, 0.15); /* Rappel Beige */
+}
+
+/* Bouton Inscription (Plein / Premium) */
+.btn-auth-nav {
+  background: #0F172A; /* Bleu Marine */
+  color: #ffffff;
+  /* On ajoute la double ombre signature en version miniature */
+  box-shadow: 
+    3px 3px 0px rgba(15, 23, 42, 0.1), 
+    6px 6px 0px rgba(212, 185, 150, 0.2);
+}
+
+.btn-auth-nav:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+  box-shadow: 
+    4px 4px 0px rgba(15, 23, 42, 0.15), 
+    8px 8px 0px rgba(212, 185, 150, 0.3);
+}
+
+.btn-auth-nav:active {
+  transform: translateY(0);
+}

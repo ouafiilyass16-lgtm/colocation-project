@@ -1,0 +1,277 @@
+/* src/styles/Auth.css */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Conteneur principal de la page */
+.auth-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+/* SECTION GAUCHE : VISUEL */
+.auth-sidebar {
+  flex: 1.1; /* Ajusté pour correspondre aux mesures de la photo */
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centrage vertical du texte */
+  padding: 80px;
+  color: white;
+}
+
+.auth-sidebar-title {
+  font-family: 'Fraunces', serif;
+  font-size: 52px;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  text-transform: uppercase;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.auth-sidebar-text {
+  font-size: 20px;
+  opacity: 0;
+  line-height: 1.6;
+  animation: fadeInUp 0.8s ease-out 0.3s forwards;
+}
+
+/* SECTION DROITE : FORMULAIRE MODIFIÉ */
+.auth-form-section {
+  flex: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 40px;
+  background-color: #ffffff;
+}
+
+.auth-form-box {
+  width: 100%;
+  max-width: 700px;
+  background: white;
+  padding: 35px;
+  border-radius: 50px;
+  
+  /* 1. Bordure en pointillés */
+  border: 2px  #0F172A; 
+  
+  /* 2. Double ombre : Bleue et Beige */
+  box-shadow: 
+    8px 8px 0px rgba(15, 23, 42, 0.1),   /* Ombre Bleue */
+    16px 16px 0px rgba(212, 185, 150, 0.2); /* Ombre Beige */
+}
+
+/* LOGO CENTRÉ AU MILIEU */
+.logo-centered-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
+  margin-bottom: 25px; /* Espace réduit pour remonter le formulaire */
+}
+
+.logo-main-img {
+  width: 110px; /* Taille optimisée pour éviter le scroll */
+  height: auto;
+  margin: -30px;
+ 
+}
+.logo-text-title span {
+  color: #D4B996; /* Beige pour "Study" */
+}
+
+/* FORMULAIRE COMPACT (pour éviter de descendre à chaque fois) */
+.auth-form-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-align: center;
+  color: #cc9e7b;
+}
+
+.auth-form-subtitle {
+  color: #64748B;
+  margin-bottom: 15px;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* --- MISE À JOUR DES CHAMPS DE SAISIE (INPUTS) --- */
+
+.form-group {
+  margin-bottom: 12px; /* Espacement vertical entre les blocs */
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 5px;
+  padding-left: 4px; /* Alignement léger avec l'ombre de l'input */
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 20px !important;
+  font-size: 14px;
+  background: #F8FAFC !important;
+  color: #0F172A !important;
+  border-radius: 50px !important;
+  outline: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  /* 1. BORDURE TRÈS LÉGÈRE (Presque transparente) */
+  border: 1px solid rgba(15, 23, 42, 0.1) !important; 
+
+  /* 2. OMBRES DOUCES ET DISCRÈTES */
+  box-shadow: 
+    2px 2px 0px rgba(15, 23, 42, 0.05),   /* Ombre bleue très claire */
+    4px 4px 0px rgba(212, 185, 150, 0.1) !important; /* Ombre beige très claire */
+    
+  transition: all 0.3s ease;
+}
+
+/* Effet au survol : la bordure devient un peu plus visible */
+.form-input:hover {
+  border-color: rgba(15, 23, 42, 0.2) !important;
+  background: #ffffff !important;
+}
+
+/* Effet au clic (Focus) */
+.form-input:focus {
+  background: #ffffff !important;
+  border-color: rgba(212, 185, 150, 0.5) !important; /* Bordure beige douce */
+  
+  /* L'ombre s'accentue légèrement pour montrer la sélection */
+  box-shadow: 
+    0px 0px 0px 4px rgba(212, 185, 150, 0.1), 
+    2px 2px 0px rgba(15, 23, 42, 0.05) !important;
+}
+.form-input:hover {
+  border-color: #D4B996; /* Changement de bordure au survol (Beige) */
+  background: #fff;
+}
+
+
+
+/* Style spécifique pour les erreurs dans les inputs */
+.form-input.error {
+  border-color: #ef4444;
+  box-shadow: 0px 0px 0px 4px rgba(239, 68, 68, 0.1);
+}
+
+/* Placeholder plus élégant */
+.form-input::placeholder {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+/* BOUTON AUTH */
+.btn-auth {
+  width: 100%;
+  padding: 14px;
+  background: #0F172A;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-auth:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+/* FOOTER */
+.auth-footer {
+  margin-top: 15px;
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.auth-footer-text {
+  font-size: 14px;
+  color: #64748B;
+}
+
+.auth-link-action {
+  color: #d59458;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+@media (max-width: 900px) {
+  .auth-sidebar { display: none; }
+}
+/* Grille de sélection du rôle */
+.role-selection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.role-card {
+  padding: 10px;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  background: #F8FAFC;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.role-card:hover {
+  border-color: #D4B996;
+  background: #fff;
+}
+
+.role-card.active {
+  border-color: #0F172A;
+  background: rgba(15, 23, 42, 0.05);
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+}
+
+.role-card-icon {
+  font-size: 18px;
+}
+
+.role-card-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.role-card-desc {
+  font-size: 10px;
+  color: #64748B;
+}

@@ -1,21 +1,14 @@
+const mongoose = require('mongoose');
 const Annonce = require('../models/Annonce');
 
-// Créer une annonce
+// ─── Créer une annonce ────────────────────────────────────────────────────────
 exports.creerAnnonce = async (req, res) => {
   try {
-    const {
-      titre, description, prix, ville,
-      typeLogement, surface, dateDisponibilite,
-    } = req.body;
+    const { titre, description, prix, ville, typeLogement, surface, dateDisponibilite } = req.body;
 
     const annonce = new Annonce({
-      titre,
-      description,
-      prix,
-      ville,
-      typeLogement,
-      surface,
-      dateDisponibilite,
+      titre, description, prix, ville,
+      typeLogement, surface, dateDisponibilite,
       proprietaire: req.user.id,
     });
 
@@ -26,7 +19,7 @@ exports.creerAnnonce = async (req, res) => {
   }
 };
 
-// Toutes les annonces actives (publique)
+// ─── Toutes les annonces actives (publique) ───────────────────────────────────
 exports.getAnnonces = async (req, res) => {
   try {
     const annonces = await Annonce.find({ statut: 'active' })
@@ -39,12 +32,35 @@ exports.getAnnonces = async (req, res) => {
   }
 };
 
-// Une annonce par ID (publique)
+// ─── ADMIN : Toutes les annonces, filtrables par ?statut= ────────────────────
+// FIX : fonction déclarée UNE SEULE FOIS (elle était en double avant)
+exports.getAnnoncesToutesAdmin = async (req, res) => {
+  try {
+    const { statut } = req.query;
+
+    // Si ?statut=rejetee  → filtre par statut
+    // Si pas de ?statut   → retourne absolument tout
+    const filtre = statut ? { statut } : {};
+
+    const annonces = await Annonce.find(filtre)
+      .populate('proprietaire', 'nom email')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(annonces);
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
+};
+
+// ─── Une annonce par ID ───────────────────────────────────────────────────────
 exports.getAnnonceById = async (req, res) => {
   try {
-    const annonce = await Annonce.findById(req.params.id)
-      .populate('proprietaire', 'nom email');
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "ID d'annonce invalide" });
+    }
 
+    const annonce = await Annonce.findById(id).populate('proprietaire', 'nom email');
     if (!annonce) return res.status(404).json({ message: 'Annonce non trouvée' });
 
     res.status(200).json(annonce);
@@ -53,7 +69,7 @@ exports.getAnnonceById = async (req, res) => {
   }
 };
 
-// Mes annonces (propriétaire connecté)
+// ─── Mes annonces (propriétaire connecté) ────────────────────────────────────
 exports.getMesAnnonces = async (req, res) => {
   try {
     const annonces = await Annonce.find({ proprietaire: req.user.id })
@@ -65,7 +81,7 @@ exports.getMesAnnonces = async (req, res) => {
   }
 };
 
-// Modifier une annonce (remet en attente pour revalidation admin)
+// ─── Modifier une annonce (remet en attente) ──────────────────────────────────
 exports.modifierAnnonce = async (req, res) => {
   try {
     const annonce = await Annonce.findById(req.params.id);
@@ -75,7 +91,7 @@ exports.modifierAnnonce = async (req, res) => {
       return res.status(403).json({ message: 'Accès refusé' });
 
     Object.assign(annonce, req.body);
-    annonce.statut = 'en_attente'; // remet en attente après modification
+    annonce.statut = 'en_attente';
     annonce.commentaireAdmin = null;
     await annonce.save();
 
@@ -85,7 +101,7 @@ exports.modifierAnnonce = async (req, res) => {
   }
 };
 
-// ─── ADMIN : Voir toutes les annonces en attente ──────────────────────────────
+// ─── ADMIN : Annonces en attente ─────────────────────────────────────────────
 exports.getAnnoncesEnAttente = async (req, res) => {
   try {
     const annonces = await Annonce.find({ statut: 'en_attente' })
@@ -140,7 +156,7 @@ exports.rejeterAnnonce = async (req, res) => {
   }
 };
 
-// Archiver une annonce (propriétaire)
+// ─── Archiver une annonce (propriétaire) ─────────────────────────────────────
 exports.archiverAnnonce = async (req, res) => {
   try {
     const annonce = await Annonce.findById(req.params.id);
@@ -158,7 +174,7 @@ exports.archiverAnnonce = async (req, res) => {
   }
 };
 
-// Supprimer une annonce
+// ─── Supprimer une annonce ────────────────────────────────────────────────────
 exports.supprimerAnnonce = async (req, res) => {
   try {
     const annonce = await Annonce.findById(req.params.id);
@@ -168,14 +184,13 @@ exports.supprimerAnnonce = async (req, res) => {
       return res.status(403).json({ message: 'Accès refusé' });
 
     await annonce.deleteOne();
-
     res.status(200).json({ message: 'Annonce supprimée' });
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
   }
 };
 
-// Ajouter plusieurs photos (max 5 au total)
+// ─── Ajouter des photos (max 5) ───────────────────────────────────────────────
 exports.ajouterPhotos = async (req, res) => {
   try {
     const { photos } = req.body;
@@ -196,7 +211,7 @@ exports.ajouterPhotos = async (req, res) => {
     const totalApresAjout = annonce.photos.length + photos.length;
     if (totalApresAjout > 5)
       return res.status(400).json({
-        message: `Maximum 5 photos autorisées. Vous avez déjà ${annonce.photos.length} photo(s), vous pouvez en ajouter ${5 - annonce.photos.length} de plus.`
+        message: `Maximum 5 photos. Vous avez ${annonce.photos.length} photo(s), vous pouvez en ajouter ${5 - annonce.photos.length} de plus.`
       });
 
     const nouvellesPhotos = photos.map(p => ({ url: p.url, ordre: p.ordre || 0 }));
@@ -219,7 +234,7 @@ exports.ajouterPhotos = async (req, res) => {
   }
 };
 
-// Supprimer une photo
+// ─── Supprimer une photo ──────────────────────────────────────────────────────
 exports.supprimerPhoto = async (req, res) => {
   try {
     const annonce = await Annonce.findById(req.params.id);
@@ -247,27 +262,16 @@ exports.supprimerPhoto = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
   }
 };
-// Recherche avancée
+
+// ─── Recherche avancée (publique, actives seulement) ─────────────────────────
 exports.rechercherAnnonces = async (req, res) => {
   try {
-    const {
-      ville,
-      typeLogement,
-      prixMin,
-      prixMax,
-      surfaceMin,
-      surfaceMax,
-      disponibleAvant,
-      disponibleApres,
-    } = req.query;
+    const { ville, typeLogement, prixMin, prixMax, surfaceMin, surfaceMax, disponibleAvant, disponibleApres } = req.query;
 
     const filtre = { statut: 'active' };
 
-    if (ville)
-      filtre.ville = { $regex: ville, $options: 'i' }; // insensible à la casse
-
-    if (typeLogement)
-      filtre.typeLogement = typeLogement;
+    if (ville)         filtre.ville = { $regex: ville, $options: 'i' };
+    if (typeLogement)  filtre.typeLogement = typeLogement;
 
     if (prixMin || prixMax) {
       filtre.prix = {};
@@ -287,11 +291,10 @@ exports.rechercherAnnonces = async (req, res) => {
       if (disponibleAvant) filtre.dateDisponibilite.$lte = new Date(disponibleAvant);
     }
 
-   const annonces = await Annonce.find(filtre)
+    const annonces = await Annonce.find(filtre)
       .populate('proprietaire', 'nom email')
       .sort({ createdAt: -1 });
 
-    // ✅ Remplacez res.status(200).json par ceci :
     if (annonces.length === 0) {
       return res.status(404).json({
         message: 'Aucune annonce trouvée pour ces critères de recherche',

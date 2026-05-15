@@ -1,0 +1,186 @@
+.admin-wrapper-prestige {
+    padding: 40px 0;
+    min-height: 80vh;
+}
+
+.admin-header {
+    margin-bottom: 40px;
+}
+
+.badge-count {
+    background: #0f172a;
+    color: #d4b996;
+    padding: 2px 10px;
+    border-radius: 50px;
+    font-weight: 800;
+    margin-right: 5px;
+}
+
+.admin-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.admin-card {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid rgba(15, 23, 42, 0.05);
+    box-shadow: 6px 6px 0px rgba(15, 23, 42, 0.02);
+}
+
+.admin-card-img {
+    width: 200px;
+    height: 150px;
+    flex-shrink: 0;
+}
+
+.admin-card-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.admin-card-content {
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+}
+
+.admin-card-info h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.owner-info {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.specs-row-mini {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.admin-card-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-valider {
+    background: #10B981;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-rejeter {
+    background: #FEF2F2;
+    color: #EF4444;
+    border: 1px solid #FEE2E2;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-voir {
+    background: #F1F5F9;
+    color: #0F172A;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-valider:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2); }
+.admin-stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.stat-box-mini {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 4px 4px 0px rgba(15, 23, 42, 0.02);
+    border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.stat-box-mini.gold {
+    background: #0F172A;
+    color: #D4B996;
+}
+
+.stat-icon { font-size: 24px; }
+.stat-label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; opacity: 0.7; }
+.stat-value { font-size: 22px; font-weight: 800; font-family: 'Fraunces', serif; }
+
+.admin-tabs-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    background: #F1F5F9;
+    padding: 5px;
+    border-radius: 12px;
+}
+
+.admin-tab {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: none;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+    color: #64748B;
+}
+
+.admin-tab.active {
+    background: white;
+    color: #0F172A;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.admin-card-row {
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.admin-card-img-wrap { width: 150px; height: 110px; border-radius: 12px; overflow: hidden; }
+.admin-card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+.admin-card-body { flex: 1; display: flex; justify-content: space-between; align-items: center; }
+.admin-card-main h3 { font-size: 17px; margin-bottom: 5px; font-family: 'Fraunces', serif; }
+
+.admin-reason {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #EF4444;
+    background: #FEF2F2;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.btn-approve { background: #10B981; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.btn-reject { background: #FEF2F2; color: #EF4444; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.btn-view-admin { background: #F1F5F9; color: #64748B; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }

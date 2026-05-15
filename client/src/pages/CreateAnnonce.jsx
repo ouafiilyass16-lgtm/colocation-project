@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { useAuth } from "../App";
+import "../styles/CreateAnnonce.css";
 
 const STEPS = [
   { id: 1, label: "Informations", icon: "📝" },
   { id: 2, label: "Détails", icon: "📐" },
   { id: 3, label: "Photos", icon: "📷" },
 ];
+
+// Liste unique et propre
+const VILLES_LIST = ["Casablanca", "Rabat", "Marrakech", "Fès", "Agadir", "Tanger", "Meknès", "Oujda", "Tétouan", "Kénitra"];
 
 export default function CreateAnnonce() {
   const { api, token, navigate, user } = useAuth();
@@ -19,302 +23,218 @@ export default function CreateAnnonce() {
   const [error, setError] = useState("");
 
   if (!user || user.role !== "proprietaire") return (
-    <div className="container empty-state" style={{ paddingTop: 80 }}>
-      <div className="empty-icon">🔒</div>
-      <h3>Accès réservé aux propriétaires</h3>
-      <button className="btn btn-primary btn-pill" onClick={() => navigate("login")} style={{ marginTop: 24 }}>Se connecter</button>
+    <div className="container empty-state-premium">
+      <div className="empty-icon-box">🔒</div>
+      <h3>Accès Propriétaire Requis</h3>
+      <button className="btn-send-premium" onClick={() => navigate("login")}>Se connecter</button>
     </div>
   );
 
-  const removePhoto = (i) => setPhotos(p => p.filter((_, idx) => idx !== i));
-
-  const handleSubmit = async () => {
-    const required = ["titre", "description", "prix", "ville", "typeLogement", "surface", "dateDisponibilite"];
-    for (const f of required) {
-      if (!form[f]) { setError(`Le champ "${f}" est requis`); return; }
-    }
-    setLoading(true); setError("");
-    const payload = { ...form, prix: Number(form.prix), surface: Number(form.surface) };
-    const data = await api.post("/annonces", payload, token);
-    if (data.annonce) {
-      if (photos.length > 0) {
-        const photosPayload = photos.map((p) => ({ url: p.url, ordre: p.ordre }));
-        await api.post(`/annonces/${data.annonce._id}/photos`, { photos: photosPayload }, token);
-      }
-      navigate("mes-annonces");
-    } else {
-      setError(data.message || "Erreur lors de la création");
-    }
-    setLoading(false);
+  const removePhoto = (i) => {
+    setPhotos(prev => prev.filter((_, idx) => idx !== i));
   };
 
-  const VILLES = ["Casablanca", "Rabat", "Marrakech", "Fès", "Agadir", "Tanger", "Meknès", "Oujda", "Tétouan", "Kénitra"];
+  const handlePhotoChange = (e) => {
+  const files = Array.from(e.target.files);
+  const remaining = 5 - photos.length;
+  
+  files.slice(0, remaining).forEach(file => {
+    // Vérification : maximum 2 Mo par fichier individuel
+    if (file.size > 2 * 1024 * 1024) {
+      setError(`L'image ${file.name} est trop lourde (max 2 Mo)`);
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = ev => setPhotos(prev => [...prev, { url: ev.target.result, ordre: prev.length, file }]);
+    reader.readAsDataURL(file);
+  });
+};
+
+  const validateStep = () => {
+    setError("");
+    if (step === 1) {
+      if (!form.titre || !form.description || !form.ville) {
+        setError("Veuillez remplir tous les champs d'informations.");
+        return false;
+      }
+    }
+    if (step === 2) {
+      if (!form.prix || !form.surface || !form.dateDisponibilite) {
+        setError("Veuillez remplir les détails techniques.");
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const handleNext = () => {
+    if (validateStep()) setStep(s => s + 1);
+  };
+
+  const handleSubmit = async () => {
+    if (!validateStep()) return;
+    
+    setLoading(true);
+    setError("");
+    
+    try {
+      const payload = { ...form, prix: Number(form.prix), surface: Number(form.surface) };
+      const data = await api.post("/annonces", payload, token);
+      
+      if (data && data.annonce) {
+        if (photos.length > 0) {
+          const photosPayload = photos.map((p) => ({ url: p.url, ordre: p.ordre }));
+          await api.post(`/annonces/${data.annonce._id}/photos`, { photos: photosPayload }, token);
+        }
+        navigate("mes-annonces");
+      } else {
+        setError(data.message || "Erreur lors de la création");
+      }
+    } catch (err) {
+      setError(err.message || "Une erreur est survenue");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="page">
-      <div className="container" style={{ maxWidth: 720 }}>
+    <div className="create-annonce-wrapper">
+      <div className="container" style={{ maxWidth: 800 }}>
 
-        {/* Back */}
-        <button
-          onClick={() => navigate("mes-annonces")}
-          style={{
-            background: "none", border: "none", cursor: "pointer",
-            fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#222",
-            padding: "8px 0", marginBottom: 24, textDecoration: "underline",
-            display: "flex", alignItems: "center", gap: 6, fontWeight: 500,
-          }}
-        >
-          ← Retour
+        <button onClick={() => navigate("mes-annonces")} className="btn-back-premium">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Retour à mes annonces</span>
         </button>
 
-        {/* Header */}
-        <div style={{ marginBottom: 36 }}>
-          <h1 style={{ fontFamily: "'Fraunces', serif", marginBottom: 8 }}>Publier une annonce</h1>
-          <p style={{ color: "#717171", fontSize: 15 }}>
-            Votre annonce sera examinée par notre équipe avant publication.
-          </p>
+        <div className="create-header">
+          <h1 className="detail-main-title">Publier une annonce</h1>
+          <p className="subtitle-prestige">Remplissez les détails pour proposer votre logement aux étudiants.</p>
         </div>
 
-        {/* Progress steps */}
-        <div style={{ display: "flex", alignItems: "center", gap: 0, marginBottom: 40 }}>
+        <div className="stepper-premium">
           {STEPS.map((s, i) => (
-            <div key={s.id} style={{ display: "flex", alignItems: "center", flex: i < STEPS.length - 1 ? 1 : "none" }}>
-              <div
-                onClick={() => s.id < step || (s.id === step + 1 && isStepComplete(step)) ? setStep(s.id) : null}
-                style={{
-                  display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
-                  padding: "8px 12px", borderRadius: 8,
-                  background: step === s.id ? "#F7F7F7" : "transparent",
-                }}
-              >
-                <div style={{
-                  width: 28, height: 28, borderRadius: "50%",
-                  background: s.id < step ? "#222" : s.id === step ? "#FF385C" : "#EBEBEB",
-                  color: s.id <= step ? "#fff" : "#B0B0B0",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 13, fontWeight: 700, flexShrink: 0,
-                }}>
-                  {s.id < step ? "✓" : s.id}
-                </div>
-                <span style={{ fontSize: 14, fontWeight: s.id === step ? 600 : 400, color: s.id === step ? "#222" : "#717171" }}>
-                  {s.label}
-                </span>
-              </div>
-              {i < STEPS.length - 1 && (
-                <div style={{ flex: 1, height: 1, background: s.id < step ? "#222" : "#DDDDDD", margin: "0 8px" }} />
-              )}
+            <div key={s.id} className={`step-item ${step === s.id ? 'active' : ''} ${step > s.id ? 'completed' : ''}`}>
+              <div className="step-circle">{step > s.id ? "✓" : s.id}</div>
+              <span className="step-label">{s.label}</span>
+              {i < STEPS.length - 1 && <div className="step-line"></div>}
             </div>
           ))}
         </div>
 
-        {error && <div className="alert alert-error mb-6">{error}</div>}
+        {error && <div className="alert-error-premium">{error}</div>}
 
-        {/* Step 1 — Informations */}
-        {step === 1 && (
-          <div style={{ background: "#fff", border: "1px solid #DDDDDD", borderRadius: 16, padding: 32 }}>
-            <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 20, marginBottom: 24, color: "#222" }}>
-              Informations générales
-            </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-              <div className="form-group">
-                <label className="form-label">Titre de l'annonce *</label>
-                <input className="form-input" placeholder="Bel appartement au centre-ville..."
-                  value={form.titre} onChange={e => setForm(p => ({ ...p, titre: e.target.value }))} />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Description *</label>
-                <textarea className="form-input" placeholder="Décrivez votre logement, ses équipements, l'environnement..."
-                  value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
-                  style={{ minHeight: 140 }} />
-              </div>
-
-              <div className="grid-2">
-                <div className="form-group">
-                  <label className="form-label">Ville *</label>
-                  <select className="form-input" value={form.ville}
-                    onChange={e => setForm(p => ({ ...p, ville: e.target.value }))}>
-                    <option value="">Choisir une ville</option>
-                    {VILLES.map(v => <option key={v} value={v}>{v}</option>)}
-                    <option value="autre">Autre</option>
-                  </select>
+        <div className="form-card-premium">
+          {step === 1 && (
+            <div className="step-content anim-fade-in">
+              <h3 className="section-title-premium">Informations générales</h3>
+              <div className="form-grid-prestige">
+                <div className="input-group-prestige">
+                  <label>Titre de l'annonce</label>
+                  <input type="text" placeholder="Ex: Studio moderne à Agdal" 
+                    value={form.titre} onChange={e => setForm(p => ({ ...p, titre: e.target.value }))} />
                 </div>
-                <div className="form-group">
-                  <label className="form-label">Type de logement *</label>
-                  <select className="form-input" value={form.typeLogement}
-                    onChange={e => setForm(p => ({ ...p, typeLogement: e.target.value }))}>
-                    <option value="appartement">Appartement</option>
-                    <option value="studio">Studio</option>
-                    <option value="chambre">Chambre</option>
-                    <option value="maison">Maison</option>
-                    <option value="autre">Autre</option>
-                  </select>
+                <div className="input-group-prestige">
+                  <label>Description</label>
+                  <textarea placeholder="Décrivez les atouts du logement..." 
+                    value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} />
                 </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Step 2 — Détails */}
-        {step === 2 && (
-          <div style={{ background: "#fff", border: "1px solid #DDDDDD", borderRadius: 16, padding: 32 }}>
-            <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 20, marginBottom: 24, color: "#222" }}>
-              Détails et tarification
-            </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-              <div className="grid-2">
-                <div className="form-group">
-                  <label className="form-label">Prix mensuel (MAD) *</label>
-                  <input className="form-input" type="number" placeholder="2500"
-                    value={form.prix} onChange={e => setForm(p => ({ ...p, prix: e.target.value }))} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Surface (m²) *</label>
-                  <input className="form-input" type="number" placeholder="45"
-                    value={form.surface} onChange={e => setForm(p => ({ ...p, surface: e.target.value }))} />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Date de disponibilité *</label>
-                <input className="form-input" type="date" value={form.dateDisponibilite}
-                  onChange={e => setForm(p => ({ ...p, dateDisponibilite: e.target.value }))} />
-              </div>
-
-              {/* Price preview */}
-              {form.prix && (
-                <div style={{
-                  background: "#F7F7F7", borderRadius: 12, padding: "16px 20px",
-                  display: "flex", alignItems: "center", gap: 12,
-                }}>
-                  <span style={{ fontSize: 24 }}>💰</span>
-                  <div>
-                    <div style={{ fontSize: 20, fontWeight: 700, color: "#222", fontFamily: "'Fraunces', serif" }}>
-                      {Number(form.prix).toLocaleString()} MAD
-                    </div>
-                    <div style={{ fontSize: 13, color: "#717171" }}>par mois</div>
+                <div className="grid-2-prestige">
+                  <div className="input-group-prestige">
+                       <label>Ville *</label>
+                         <input 
+                          list="villes-list" 
+                            placeholder="Saisissez ou choisissez une ville"
+                              value={form.ville} 
+                                onChange={e => setForm(p => ({ ...p, ville: e.target.value }))}
+                                />
+                                  <datalist id="villes-list">
+                                         {VILLES_LIST.map(v => <option key={v} value={v} />)}
+                                     </datalist>
+                                       </div>
+                  <div className="input-group-prestige">
+                    <label>Type de logement</label>
+                    <select value={form.typeLogement} onChange={e => setForm(p => ({ ...p, typeLogement: e.target.value }))}>
+                      <option value="appartement">Appartement</option>
+                      <option value="studio">Studio</option>
+                      <option value="chambre">Chambre</option>
+                      <option value="maison">Maison</option>
+                    </select>
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Step 3 — Photos */}
-        {step === 3 && (
-          <div style={{ background: "#fff", border: "1px solid #DDDDDD", borderRadius: 16, padding: 32 }}>
-            <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 20, marginBottom: 8, color: "#222" }}>
-              Photos du logement
-            </h3>
-            <p style={{ color: "#717171", fontSize: 14, marginBottom: 24 }}>
-              Ajoutez jusqu'à 5 photos. Les annonces avec photos sont 10× plus consultées.
-            </p>
-
-            {/* Upload zone */}
-            <div
-              onClick={() => photos.length < 5 && document.getElementById("photo-input").click()}
-              style={{
-                border: `2px dashed ${photos.length >= 5 ? "#DDDDDD" : "#FF385C"}`,
-                borderRadius: 16, padding: "36px 24px", textAlign: "center",
-                cursor: photos.length >= 5 ? "not-allowed" : "pointer",
-                background: photos.length >= 5 ? "#F7F7F7" : "rgba(255,56,92,0.02)",
-                transition: "all 0.15s",
-                marginBottom: 16,
-                opacity: photos.length >= 5 ? 0.6 : 1,
-              }}
-              onMouseOver={e => { if (photos.length < 5) e.currentTarget.style.background = "rgba(255,56,92,0.04)"; }}
-              onMouseOut={e => { e.currentTarget.style.background = photos.length >= 5 ? "#F7F7F7" : "rgba(255,56,92,0.02)"; }}
-            >
-              <div style={{ fontSize: 36, marginBottom: 10 }}>📷</div>
-              <div style={{ fontSize: 15, fontWeight: 600, color: "#222", marginBottom: 6 }}>
-                {photos.length >= 5 ? "Limite atteinte (5/5)" : "Cliquez pour ajouter des photos"}
-              </div>
-              <div style={{ fontSize: 13, color: "#B0B0B0" }}>
-                JPG, PNG, WEBP — {5 - photos.length} emplacement(s) restant(s)
               </div>
             </div>
+          )}
 
-            <input id="photo-input" type="file" accept="image/*" multiple style={{ display: "none" }}
-              onChange={e => {
-                const files = Array.from(e.target.files);
-                const remaining = 5 - photos.length;
-                files.slice(0, remaining).forEach(file => {
-                  const reader = new FileReader();
-                  reader.onload = ev => setPhotos(prev => [...prev, { url: ev.target.result, ordre: prev.length, file }]);
-                  reader.readAsDataURL(file);
-                });
-                e.target.value = "";
-              }}
-            />
+          {step === 2 && (
+            <div className="step-content anim-fade-in">
+              <h3 className="section-title-premium">Détails techniques</h3>
+              <div className="form-grid-prestige">
+                <div className="grid-2-prestige">
+                  <div className="input-group-prestige">
+                    <label>Prix mensuel (MAD)</label>
+                    <input type="number" value={form.prix} onChange={e => setForm(p => ({ ...p, prix: e.target.value }))} />
+                  </div>
+                  <div className="input-group-prestige">
+                    <label>Surface (m²)</label>
+                    <input type="number" value={form.surface} onChange={e => setForm(p => ({ ...p, surface: e.target.value }))} />
+                  </div>
+                </div>
+                <div className="input-group-prestige">
+                  <label>Date de disponibilité</label>
+                  <input type="date" value={form.dateDisponibilite} onChange={e => setForm(p => ({ ...p, dateDisponibilite: e.target.value }))} />
+                </div>
+              </div>
+            </div>
+          )}
 
-            {photos.length > 0 && (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: 10 }}>
+          {step === 3 && (
+            <div className="step-content anim-fade-in">
+              <h3 className="section-title-premium">Photos</h3>
+              <div className="upload-zone-premium" onClick={() => photos.length < 5 && document.getElementById("photo-input").click()}>
+                <div className="upload-icon">📷</div>
+                <p>Cliquez pour ajouter des photos (Max 5)</p>
+              </div>
+              <input id="photo-input" type="file" hidden multiple onChange={handlePhotoChange} />
+              <div className="photo-preview-grid">
                 {photos.map((p, i) => (
-                  <div key={i} style={{ position: "relative", borderRadius: 12, overflow: "hidden", aspectRatio: "4/3" }}>
-                    <img src={p.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                    {i === 0 && (
-                      <div style={{
-                        position: "absolute", bottom: 6, left: 6,
-                        background: "rgba(0,0,0,0.65)", color: "#fff",
-                        fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 100,
-                      }}>
-                        PRINCIPALE
-                      </div>
-                    )}
-                    <button
-                      onClick={() => removePhoto(i)}
-                      style={{
-                        position: "absolute", top: 6, right: 6,
-                        background: "rgba(255,255,255,0.9)", border: "none",
-                        borderRadius: "50%", width: 24, height: 24, fontSize: 11,
-                        cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                        fontWeight: 700, color: "#222",
-                      }}
-                    >
-                      ×
-                    </button>
-                  </div>
+                 <div key={i} className="photo-thumb">
+  <img src={p.url} alt="" />
+  {/* Bouton de suppression avec e.stopPropagation pour éviter d'ouvrir l'input file */}
+  <button 
+    className="remove-btn-prestige" 
+    type="button"
+    onClick={(e) => { e.stopPropagation(); removePhoto(i); }}
+  >
+    ×
+  </button>
+  {i === 0 && <div className="main-badge">Principale</div>}
+</div>
                 ))}
               </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
 
-        {/* Navigation */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 24 }}>
-          <button
-            className="btn btn-secondary"
-            onClick={() => step > 1 ? setStep(s => s - 1) : navigate("mes-annonces")}
-          >
+        <div className="navigation-footer-prestige">
+          <button className="btn-secondary-prestige" onClick={() => step > 1 ? setStep(s => s - 1) : navigate("mes-annonces")}>
             {step === 1 ? "Annuler" : "← Précédent"}
           </button>
-
+          
           {step < 3 ? (
-            <button
-              className="btn btn-primary btn-pill"
-              onClick={() => setStep(s => s + 1)}
-              style={{ padding: "12px 28px" }}
-            >
+            <button className="btn-send-premium" onClick={handleNext} style={{width: 'auto', padding: '14px 40px'}}>
               Suivant →
             </button>
           ) : (
-            <button
-              className="btn btn-primary btn-pill"
-              onClick={handleSubmit}
-              disabled={loading}
-              style={{ padding: "12px 32px", fontSize: 15 }}
-            >
-              {loading ? <><span className="spinner" /> Publication...</> : "📤 Publier l'annonce"}
+            <button className="btn-send-premium" onClick={handleSubmit} disabled={loading} style={{width: 'auto', padding: '14px 40px'}}>
+              {loading ? "Publication..." : "📤 Publier l'annonce"}
             </button>
           )}
         </div>
       </div>
     </div>
   );
-
-  function isStepComplete(s) {
-    if (s === 1) return form.titre && form.description && form.ville && form.typeLogement;
-    if (s === 2) return form.prix && form.surface && form.dateDisponibilite;
-    return true;
-  }
 }

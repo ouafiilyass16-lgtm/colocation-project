@@ -1,190 +1,157 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../App";
+import "../styles/Messages.css";
 
 export default function Messages() {
   const { api, token, user, navigate } = useAuth();
-  const [tab, setTab] = useState("recus");
-  const [messages, setMessages] = useState([]);
+  const [conversations, setConversations] = useState([]);
+  const [selectedConv, setSelectedConv] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [reply, setReply] = useState({ open: false, to: null, toName: "", content: "" });
-  const [replyStatus, setReplyStatus] = useState("");
+  const [newMessage, setNewMessage] = useState("");
+  const scrollRef = useRef(null);
 
-  useEffect(() => { if (token) loadMessages(); }, [token, tab]);
+  useEffect(() => { if (token) loadConversations(); }, [token]);
 
-  const loadMessages = async () => {
+  // Scroll auto vers le bas
+  useEffect(() => {
+  if (scrollRef.current) {
+    // block: "end" force l'alignement sur le bas du conteneur
+    scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+  }
+}, [selectedConv?.messages]);
+  const loadConversations = async () => {
     setLoading(true);
-    const data = await api.get(`/messages/${tab}`, token);
-    setMessages(data.messages || []);
+    try {
+      const resRecus = await api.get("/messages/recus", token);
+      const resEnvoyes = await api.get("/messages/envoyes", token);
+      
+      const allMessages = [...(resRecus.messages || []), ...(resEnvoyes.messages || [])];
+      
+      const grouped = allMessages.reduce((acc, msg) => {
+        const convId = msg.annonce?._id || "general";
+        if (!acc[convId]) acc[convId] = { 
+          annonce: msg.annonce, 
+          messages: [], 
+          interlocuteur: msg.expediteur._id === user._id ? msg.destinataire : msg.expediteur 
+        };
+        acc[convId].messages.push(msg);
+        return acc;
+      }, {});
+
+      const sortedConv = Object.values(grouped).map(c => ({
+        ...c,
+        messages: c.messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      }));
+
+      setConversations(sortedConv);
+      if (sortedConv.length > 0 && !selectedConv) setSelectedConv(sortedConv[0]);
+    } catch (err) {
+      console.error("Erreur chargement");
+    }
     setLoading(false);
   };
 
-  const markAsRead = async (id) => {
-    await api.patch(`/messages/${id}/lu`, {}, token);
-    setMessages(prev => prev.map(m => m._id === id ? { ...m, lu: true } : m));
-  };
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if (!newMessage.trim()) return;
 
-  const deleteMessage = async (id) => {
-    await api.delete(`/messages/${id}`, token);
-    setMessages(prev => prev.filter(m => m._id !== id));
-  };
+    try {
+      const res = await api.post("/messages", {
+        destinataireId: selectedConv.interlocuteur._id,
+        annonceId: selectedConv.annonce?._id,
+        contenu: newMessage
+      }, token);
 
-  const sendReply = async () => {
-    if (!reply.content.trim()) return;
-    const res = await api.post("/messages", { destinataireId: reply.to, contenu: reply.content }, token);
-    if (res.data) {
-      setReplyStatus("✓ Message envoyé !");
-      setTimeout(() => { setReply({ open: false, to: null, toName: "", content: "" }); setReplyStatus(""); }, 1500);
+      if (res) {
+        setNewMessage("");
+        loadConversations(); // Rafraîchit pour voir son propre message envoyé (✓)
+      }
+    } catch (err) {
+      console.error("Erreur envoi");
     }
   };
 
-  const openReply = (msg) => {
-    const other = tab === "recus" ? msg.expediteur : msg.destinataire;
-    setReply({ open: true, to: other._id, toName: other.nom, content: "" });
-  };
-
-  if (!user) return (
-    <div className="container empty-state" style={{ paddingTop: 80 }}>
-      <div className="empty-icon">🔒</div>
-      <h3>Connexion requise</h3>
-      <button className="btn btn-primary btn-pill" onClick={() => navigate("login")} style={{ marginTop: 20 }}>Se connecter</button>
-    </div>
-  );
-
-  const unreadCount = messages.filter(m => !m.lu).length;
+  if (loading) return <div className="page-loading"><div className="spinner" /></div>;
 
   return (
-    <div className="page">
-      <div className="container" style={{ maxWidth: 760 }}>
-        <h1 style={{ fontFamily: "'Fraunces', serif", marginBottom: 32 }}>Messages</h1>
-
-        <div className="tabs">
-          <button className={`tab ${tab === "recus" ? "active" : ""}`} onClick={() => setTab("recus")}>
-            Reçus
-            {tab === "recus" && unreadCount > 0 && (
-              <span style={{
-                background: "#FF385C", color: "#fff",
-                borderRadius: 100, padding: "1px 8px", fontSize: 11, fontWeight: 700, marginLeft: 6,
-              }}>
-                {unreadCount}
-              </span>
-            )}
-          </button>
-          <button className={`tab ${tab === "envoyes" ? "active" : ""}`} onClick={() => setTab("envoyes")}>
-            Envoyés
-          </button>
-        </div>
-
-        {loading ? (
-          <div className="page-loading"><div className="spinner" style={{ width: 36, height: 36 }} /></div>
-        ) : messages.length === 0 ? (
-          <div className="empty-state">
-            <div className="empty-icon">💬</div>
-            <h3>Aucun message</h3>
-            <p>{tab === "recus" ? "Vous n'avez pas encore reçu de messages" : "Vous n'avez pas encore envoyé de messages"}</p>
+    <div className="chat-container-prestige">
+      <div className="chat-window">
+        
+        {/* SIDEBAR */}
+        <aside className="chat-sidebar">
+          <div className="sidebar-header">
+            <h3>Discussions</h3>
           </div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {messages.map(m => {
-              const isUnread = tab === "recus" && !m.lu;
-              const other = tab === "recus" ? m.expediteur : m.destinataire;
-              return (
-                <div
-                  key={m._id}
-                  onClick={() => isUnread && markAsRead(m._id)}
-                  style={{
-                    background: "#fff",
-                    border: `1px solid ${isUnread ? "rgba(255,56,92,0.3)" : "#DDDDDD"}`,
-                    borderLeft: isUnread ? "3px solid #FF385C" : "1px solid #DDDDDD",
-                    borderRadius: 16, padding: "18px 20px",
-                    display: "grid", gridTemplateColumns: "1fr auto",
-                    gap: 16, alignItems: "start",
-                    cursor: isUnread ? "pointer" : "default",
-                    transition: "box-shadow 0.15s",
-                  }}
-                  onMouseOver={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"}
-                  onMouseOut={e => e.currentTarget.style.boxShadow = "none"}
-                >
-                  <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
-                      <div style={{
-                        width: 36, height: 36, borderRadius: "50%",
-                        background: "linear-gradient(135deg, #FF385C, #E31C5F)",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: 14, fontWeight: 700, color: "#fff", flexShrink: 0,
-                      }}>
-                        {other?.nom?.[0]?.toUpperCase()}
-                      </div>
-                      <div>
-                        <span style={{ fontWeight: isUnread ? 700 : 500, fontSize: 15, color: "#222" }}>{other?.nom}</span>
-                        {isUnread && <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#FF385C", display: "inline-block", marginLeft: 6 }} />}
-                      </div>
-                      {m.annonce && (
-                        <span style={{
-                          fontSize: 11, color: "#FF385C",
-                          background: "rgba(255,56,92,0.08)",
-                          padding: "2px 10px", borderRadius: 100, fontWeight: 600,
-                        }}>
-                          {m.annonce.titre}
-                        </span>
-                      )}
-                    </div>
-                    <p style={{ color: isUnread ? "#222" : "#717171", fontSize: 14, lineHeight: 1.6, marginBottom: 6 }}>
-                      {m.contenu}
-                    </p>
-                    <div style={{ fontSize: 12, color: "#B0B0B0" }}>
-                      {new Date(m.createdAt).toLocaleString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                    {tab === "recus" && (
-                      <button
-                        className="btn btn-secondary btn-sm"
-                        onClick={e => { e.stopPropagation(); openReply(m); }}
-                      >
-                        Répondre
-                      </button>
-                    )}
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={e => { e.stopPropagation(); deleteMessage(m._id); }}
-                    >
-                      🗑️
-                    </button>
-                  </div>
+          <div className="conv-list">
+            {conversations.map((conv, idx) => (
+              <div 
+                key={idx} 
+                className={`conv-item ${selectedConv?.annonce?._id === conv.annonce?._id ? "active" : ""}`}
+                onClick={() => setSelectedConv(conv)}
+              >
+                <div className="avatar-small">{conv.interlocuteur?.nom[0]}</div>
+                <div className="conv-info">
+                  <div className="name">{conv.interlocuteur?.nom}</div>
+                  <div className="last-msg">{conv.annonce?.titre || "Discussion"}</div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
-        )}
-      </div>
+        </aside>
 
-      {/* Reply Modal */}
-      {reply.open && (
-        <div className="modal-overlay" onClick={() => setReply(p => ({ ...p, open: false }))}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <h3 style={{ fontFamily: "'Fraunces', serif", marginBottom: 6 }}>Répondre à {reply.toName}</h3>
-            <p style={{ color: "#717171", fontSize: 13, marginBottom: 20 }}>Votre message sera envoyé directement</p>
-            {replyStatus ? (
-              <div className="alert alert-success">{replyStatus}</div>
-            ) : (
-              <>
-                <textarea
-                  className="form-input"
-                  placeholder="Votre message..."
-                  value={reply.content}
-                  onChange={e => setReply(p => ({ ...p, content: e.target.value }))}
-                  style={{ marginBottom: 16, minHeight: 100 }}
+        {/* ZONE DE CHAT */}
+        <main className="chat-main">
+          {selectedConv ? (
+            <>
+              <header className="chat-header">
+                <div className="header-info">
+                  <span className="user-name">{selectedConv.interlocuteur.nom}</span>
+                  <span className="annonce-ref">Objet : {selectedConv.annonce?.titre}</span>
+                </div>
+              </header>
+
+             <div className="chat-messages">
+  {selectedConv.messages.map((m, i) => {
+    const isMe = m.expediteur._id === user._id;
+    return (
+      <div key={i} className={`message-bubble ${isMe ? "sent" : "received"}`}>
+        <p>{m.contenu}</p>
+        <div className="msg-status-row">
+          <span className="msg-time">
+            {new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </span>
+          {isMe && (
+            <span className={`read-status ${m.lu ? "is-read" : ""}`}>
+              {m.lu ? " ✓✓" : " ✓"}
+            </span>
+                        )}
+                        
+                      </div>
+                    </div>
+                  );
+                })}
+                <div ref={scrollRef} />
+              </div>
+
+              <form className="chat-input-area" onSubmit={handleSend}>
+                <input 
+                  type="text" 
+                  placeholder="Écrivez votre message..." 
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
                 />
-                <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-                  <button className="btn btn-secondary" onClick={() => setReply(p => ({ ...p, open: false }))}>Annuler</button>
-                  <button className="btn btn-primary" onClick={sendReply} disabled={!reply.content.trim()}>Envoyer</button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      )}
+                <button type="submit" className="btn-chat-send">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                  </svg>
+                </button>
+              </form>
+            </>
+          ) : (
+            <div className="empty-chat">Sélectionnez une discussion</div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,221 @@
+.create-annonce-wrapper {
+    padding-bottom: 80px;
+}
+
+.create-header {
+    margin-bottom: 40px;
+}
+
+.subtitle-prestige {
+    color: #94a3b8;
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+/* Stepper Modern */
+.stepper-premium {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-bottom: 10px;
+    border: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.step-item.active .step-circle {
+    background: #0f172a;
+    color: #d4b996;
+}
+
+.step-item.completed .step-circle {
+    background: #d4b996;
+    color: #0f172a;
+}
+
+.step-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #94a3b8;
+}
+
+.step-item.active .step-label { color: #0f172a; }
+
+.step-line {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: #f1f5f9;
+    z-index: -1;
+}
+
+.step-item.completed .step-line { background: #d4b996; }
+
+/* Form Card */
+.form-card-premium {
+    background: white;
+    padding: 40px;
+    border-radius: 32px;
+    box-shadow: 10px 10px 0px rgba(15, 23, 42, 0.03), 
+                20px 20px 0px rgba(212, 185, 150, 0.1);
+    border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.input-group-prestige {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.input-group-prestige label {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 1px;
+}
+
+.input-group-prestige input, 
+.input-group-prestige select, 
+.input-group-prestige textarea {
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.input-group-prestige input:focus {
+    border-color: #d4b996;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(212, 185, 150, 0.1);
+}
+
+.grid-2-prestige {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Upload Area */
+.upload-zone-premium {
+    border: 2px dashed #d4b996;
+    background: rgba(212, 185, 150, 0.03);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.upload-zone-premium:hover { background: rgba(212, 185, 150, 0.08); }
+
+.photo-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.photo-thumb {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    aspect-ratio: 1;
+}
+
+.main-badge {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background: #0f172a;
+    color: #d4b996;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 50px;
+}
+
+.price-preview-pill {
+    background: #0f172a;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.price-preview-pill .val {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    color: #d4b996;
+}
+
+/* Footer Nav */
+.navigation-footer-prestige {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.btn-secondary-prestige {
+    background: none;
+    border: none;
+    font-weight: 700;
+    color: #94a3b8;
+    cursor: pointer;
+}
+/* Bouton Retour Prestige */
+.btn-back-premium {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 8px 0;
+  color: #64748B;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 24px;
+  text-decoration: underline;
+}
+
+.btn-back-premium:hover {
+  color: #0F172A;
+  transform: translateX(-5px);
+}
+
+/* Les autres styles restent identiques à la version précédente */
+.stepper-premium {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    position: relative;
+}
