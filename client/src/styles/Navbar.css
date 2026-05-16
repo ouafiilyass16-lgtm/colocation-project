@@ -1,15 +1,53 @@
-/* src/styles/Navbar.css */
 
+/* Assure la pleine largeur complète de l'écran */
 .navbar-container {
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  height: 72px;
-  background: var(--color-navbar-bg, #ffffff);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;       /* Occupe 100% de la largeur de la fenêtre visible */
+    height: 75px;
+    background: white;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    margin: 0;
+    padding: 0;
+}
+
+/* Aligne le contenu à l'intérieur */
+.navbar-content {
+    width: 100%;
+    max-width: 100%;    /* Permet de s'étendre sans restrictions de marges */
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;    /* Marges intérieures gauche/droite respirantes */
+    box-sizing: border-box;
+}
+
+/* Alignement flexbox pour les items du dropdown */
+.drop-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;          /* Espace parfait entre le SVG beige et le texte */
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.drop-item:hover {
+    background: #f8fafc;
+}
+
+.drop-item.accent {
+    color: #FF385C;    /* Couleur de déconnexion spécifique */
 }
 
 /* Effet au scroll */

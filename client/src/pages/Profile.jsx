@@ -4,26 +4,92 @@ import "../styles/Profile.css";
 
 const roleConfig = {
   etudiant: {
-    icon: "🎓", label: "Étudiant",
-    color: "#D4B996", bg: "rgba(15, 23, 42, 0.05)",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2.5">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+        <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+      </svg>
+    ), 
+    label: "Étudiant",
+    color: "#D4B996", 
+    bg: "rgba(15, 23, 42, 0.05)",
     fields: [
-      { key: "universite",    label: "Université",            placeholder: "ENSA, ENSIAS...",        icon: "🏫" },
-      { key: "niveauEtude",   label: "Niveau d'étude",        placeholder: "Licence, Master...",     icon: "📚" },
-      { key: "villeRecherche",label: "Ville recherchée",      placeholder: "Casablanca...",          icon: "📍" },
-      { key: "budgetMax",     label: "Budget max (MAD/mois)", placeholder: "3000", type: "number",   icon: "💰" },
+      { 
+        key: "universite", label: "Université", placeholder: "ENSA, ENSIAS...", 
+        icon: (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2.5">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        ) 
+      },
+      { 
+        key: "niveauEtude", label: "Niveau d'étude", placeholder: "Licence, Master...", 
+        icon: (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2.5">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        ) 
+      },
+      { 
+        key: "villeRecherche", label: "Ville recherchée", placeholder: "Casablanca...", 
+        icon: (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2.5">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        ) 
+      },
+      { 
+        key: "budgetMax", label: "Budget max (MAD/mois)", placeholder: "3000", type: "number", 
+        icon: (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2.5">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        ) 
+      },
     ],
   },
   proprietaire: {
-    icon: "🏠", label: "Propriétaire",
-    color: "#D4B996", bg: "rgba(15, 23, 42, 0.05)",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2.5">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    ), 
+    label: "Propriétaire",
+    color: "#D4B996", 
+    bg: "rgba(15, 23, 42, 0.05)",
     fields: [
-      { key: "telephone", label: "Téléphone", placeholder: "+212 6XX XXX XXX", icon: "📞" },
-      { key: "adresse",   label: "Adresse",   placeholder: "123 Rue Mohammed V, Casablanca", icon: "🏠" },
+      { 
+        key: "telephone", label: "Téléphone", placeholder: "+212 6XX XXX XXX", 
+        icon: (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2.5">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+        ) 
+      },
+      { 
+        key: "adresse", label: "Adresse", placeholder: "123 Rue Mohammed V, Casablanca", 
+        icon: (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        ) 
+      },
     ],
   },
   admin: {
-    icon: "🛡️", label: "Administrateur",
-    color: "#D4B996", bg: "#0F172A",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2.5">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      </svg>
+    ),
+    label: "Administrateur",
+    color: "#D4B996",
+    bg: "#0F172A",
     fields: [],
   },
 };
@@ -72,7 +138,6 @@ export default function Profile() {
         setSaved({ ...form });
         setMsg("success");
         setEditing(false);
-        // On attend un peu pour laisser l'utilisateur voir le succès
         setTimeout(() => setMsg(""), 3000);
       } else {
         setMsg("error");
@@ -90,11 +155,16 @@ export default function Profile() {
   };
 
   if (!user) return (
-    <div className="empty-state-prestige">
-      <div className="empty-icon-box">🔒</div>
+    <div className="empty-state-prestige" style={{ padding: "100px 20px", textAlign: 'center' }}>
+      <div className="empty-icon-box" style={{ margin: "0 auto 20px" }}>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2.5">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
       <h3>Accès restreint</h3>
       <p>Veuillez vous connecter pour gérer votre profil.</p>
-      <button className="btn-prestige-gold" onClick={() => navigate("login")}>
+      <button className="btn-prestige-gold" onClick={() => navigate("login")} style={{ marginTop: "20px" }}>
         Se connecter
       </button>
     </div>
@@ -116,12 +186,14 @@ export default function Profile() {
               <div className="profile-hero-content">
                 <div className="avatar-huge">
                   {user.nom?.[0]?.toUpperCase()}
-                  <div className="avatar-badge">{config.icon}</div>
+                  <div className="avatar-badge" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    {config.icon}
+                  </div>
                 </div>
                 <div className="profile-hero-text">
                   <h1 className="fraunces-title">{user.nom}</h1>
                   <p className="profile-email">{user.email}</p>
-                  <span className="role-badge-prestige" style={{ background: config.bg, color: config.color }}>
+                  <span className="role-badge-prestige" style={{ background: config.bg, color: config.color, display: "inline-flex", alignItems: "center", gap: "6px" }}>
                     {config.label}
                   </span>
                 </div>
@@ -136,8 +208,12 @@ export default function Profile() {
                   <div className="section-header-flex">
                     <h3 className="section-title-prestige">Informations Personnelles</h3>
                     {!editing && (
-                      <button onClick={() => setEditing(true)} className="btn-edit-prestige">
-                        <span>✏️</span> Modifier le profil
+                      <button onClick={() => setEditing(true)} className="btn-edit-prestige" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                          <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"></path>
+                        </svg>
+                        Modifier le profil
                       </button>
                     )}
                   </div>
@@ -149,7 +225,9 @@ export default function Profile() {
                     <div className="info-display-grid">
                       {config.fields.map((f) => (
                         <div key={f.key} className="info-item-prestige">
-                          <label>{f.icon} {f.label}</label>
+                          <label style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                            {f.icon} {f.label}
+                          </label>
                           <div className={`info-value ${!saved[f.key] ? 'is-empty' : ''}`}>
                             {saved[f.key] 
                               ? (f.key === "budgetMax" ? `${Number(saved[f.key]).toLocaleString()} MAD / mois` : saved[f.key])
@@ -163,7 +241,9 @@ export default function Profile() {
                       <div className="form-grid-2">
                         {config.fields.map(f => (
                           <div key={f.key} className="form-group-prestige">
-                            <label>{f.icon} {f.label}</label>
+                            <label style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                              {f.icon} {f.label}
+                            </label>
                             <input
                               type={f.type || "text"}
                               placeholder={f.placeholder}
@@ -173,7 +253,7 @@ export default function Profile() {
                           </div>
                         ))}
                       </div>
-                      <div className="form-actions-prestige">
+                      <div className="form-actions-prestige" style={{ display: "flex", gap: "12px", marginTop: "24px" }}>
                         {/* BOUTON DE VALIDATION */}
                         <button className="btn-save-prestige" onClick={handleSave} disabled={saving}>
                           {saving ? "Enregistrement..." : "Confirmer les modifications"}
@@ -185,16 +265,19 @@ export default function Profile() {
                 </section>
               )}
 
-              {/* ── ACCÈS ADMIN (Si applicable) ── */}
+              {/* ── ACCÈS ADMIN ── */}
               {user.role === "admin" && (
                 <section className="profile-section-card admin-special">
-                  <div className="admin-cta-flex">
+                  <div className="admin-cta-flex" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div className="admin-cta-text">
                       <h3 className="section-title-prestige white">Contrôle Administrateur</h3>
                       <p>Gérez les annonces en attente et les utilisateurs de la plateforme.</p>
                     </div>
-                    <button className="btn-admin-go" onClick={() => navigate("admin")}>
-                      Ouvrir le Panel 🛡️
+                    <button className="btn-admin-go" onClick={() => navigate("admin")} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span>Ouvrir le Panel</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                      </svg>
                     </button>
                   </div>
                 </section>

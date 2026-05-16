@@ -91,7 +91,7 @@ export default function AnnonceDetail({ id }) {
           <h1 className="detail-main-title">{annonce.titre}</h1>
           <div className="detail-meta-row">
             <StatusBadge status={annonce.statut} />
-            <span className="location-text">📍 {annonce.ville}</span>
+            <span className="location-text"> {annonce.ville}</span>
           </div>
         </div>
 
@@ -119,10 +119,10 @@ export default function AnnonceDetail({ id }) {
         <div className="detail-main-layout">
           <div className="detail-left-content">
             <div className="spec-pill-group">
-              <SpecItem icon="🏠" label="Type" value={annonce.typeLogement} />
-              <SpecItem icon="📐" label="Surface" value={`${annonce.surface} m²`} />
-              <SpecItem icon="📍" label="Ville" value={annonce.ville} />
-              <SpecItem icon="📅" label="Dispo" value={annonce.dateDisponibilite ? new Date(annonce.dateDisponibilite).toLocaleDateString() : "N/C"} />
+              <SpecItem icon="" label="Type" value={annonce.typeLogement} />
+              <SpecItem icon="" label="Surface" value={`${annonce.surface} m²`} />
+              <SpecItem icon="" label="Ville" value={annonce.ville} />
+              <SpecItem icon="" label="Dispo" value={annonce.dateDisponibilite ? new Date(annonce.dateDisponibilite).toLocaleDateString() : "N/C"} />
             </div>
 
             <h3 className="section-title-premium">À propos du logement</h3>
@@ -144,13 +144,13 @@ export default function AnnonceDetail({ id }) {
                     onClick={() => navigate("modifier-annonce", annonce._id)} 
                     className="btn-edit-gold-full"
                   >
-                    📝 Modifier l'annonce
+                     Modifier l'annonce
                   </button>
                   <button 
                     onClick={handleArchive} 
                     className="btn-archive-outline"
                   >
-                    📦 Archiver
+                    Archiver
                   </button>
                 </div>
               ) : (

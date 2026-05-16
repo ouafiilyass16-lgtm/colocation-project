@@ -70,7 +70,6 @@ export default function AnnonceDetail({ id }) {
     </div>
   );
 
-  // Vérification propriétaire (conversion en String pour éviter les erreurs de type)
   const currentUserId = user?._id || user?.id;
   const ownerId = annonce.proprietaire?._id || annonce.proprietaire;
   const isOwner = currentUserId && ownerId && String(currentUserId) === String(ownerId);
@@ -96,7 +95,14 @@ export default function AnnonceDetail({ id }) {
           <h1 className="detail-main-title">{annonce.titre}</h1>
           <div className="detail-meta-row">
             <StatusBadge status={annonce.statut} />
-            <span className="location-text">📍 {annonce.ville}</span>
+            <span className="location-text">
+              {/* Icône de localisation moderne en SVG */}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2.5" style={{ marginRight: '5px', verticalAlign: 'middle' }}>
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              {annonce.ville}
+            </span>
           </div>
         </div>
 
@@ -123,11 +129,50 @@ export default function AnnonceDetail({ id }) {
 
         <div className="detail-main-layout">
           <div className="detail-left-content">
+            
+            {/* ── SECTION PILLS AVEC LES NOUVELLES ICÔNES SVG PRESTIGE ── */}
             <div className="spec-pill-group">
-              <SpecItem icon="🏠" label="Type" value={annonce.typeLogement} />
-              <SpecItem icon="📐" label="Surface" value={`${annonce.surface} m²`} />
-              <SpecItem icon="📍" label="Ville" value={annonce.ville} />
-              <SpecItem icon="📅" label="Dispo" value={annonce.dateDisponibilite ? new Date(annonce.dateDisponibilite).toLocaleDateString() : "N/C"} />
+              <SpecItem 
+                icon={
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                } 
+                label="Type" 
+                value={annonce.typeLogement} 
+              />
+              <SpecItem 
+                icon={
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M9 3v18M15 3v18M3 9h18M3 15h18" />
+                  </svg>
+                } 
+                label="Surface" 
+                value={`${annonce.surface} m²`} 
+              />
+              <SpecItem 
+                icon={
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                } 
+                label="Ville" 
+                value={annonce.ville} 
+              />
+              <SpecItem 
+                icon={
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4B996" strokeWidth="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                } 
+                label="Disponibilité" 
+                value={annonce.dateDisponibilite ? new Date(annonce.dateDisponibilite).toLocaleDateString() : "Immédiate"} 
+              />
             </div>
 
             <h3 className="section-title-premium">À propos du logement</h3>
@@ -136,7 +181,6 @@ export default function AnnonceDetail({ id }) {
 
           <aside className="detail-sidebar">
             <div className="booking-card-premium">
-              {/* AFFICHAGE DU NOM DU PROPRIÉTAIRE */}
               <div className="owner-info-small">
                 <span className="owner-label">Propriétaire :</span>
                 <span className="owner-name-value">{annonce.proprietaire?.nom || "Non renseigné"}</span>
@@ -151,10 +195,10 @@ export default function AnnonceDetail({ id }) {
                 <div className="owner-actions-vertical">
                   <div className="owner-management-info">Ma gestion</div>
                   <button onClick={() => navigate("modifier-annonce", annonce._id)} className="btn-edit-gold-full">
-                    📝 Modifier l'annonce
+                     Modifier l'annonce
                   </button>
                   <button onClick={handleArchive} className="btn-archive-outline">
-                    📦 Archiver
+                     Archiver
                   </button>
                 </div>
               ) : (
@@ -187,7 +231,9 @@ export default function AnnonceDetail({ id }) {
 function SpecItem({ icon, label, value }) {
   return (
     <div className="spec-pill-item">
-      <span className="icon-box-premium">{icon}</span>
+      <div className="icon-box-premium">
+        {icon}
+      </div>
       <div className="spec-texts">
         <div className="spec-label">{label}</div>
         <div className="spec-value">{value}</div>

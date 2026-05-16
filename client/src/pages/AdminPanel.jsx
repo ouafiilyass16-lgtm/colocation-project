@@ -90,21 +90,21 @@ export default function AdminPanel() {
         {/* ── STATS ── */}
         <div className="admin-stats-row">
           <div className="stat-box-mini">
-            <span className="stat-icon">✅</span>
+            <span className="stat-icon"></span>
             <div className="stat-info">
               <span className="stat-label">Validées</span>
               <span className="stat-value">{stats.active}</span>
             </div>
           </div>
           <div className="stat-box-mini gold">
-            <span className="stat-icon">⏳</span>
+            <span className="stat-icon"></span>
             <div className="stat-info">
               <span className="stat-label">En Attente</span>
               <span className="stat-value">{stats.enAttente}</span>
             </div>
           </div>
           <div className="stat-box-mini">
-            <span className="stat-icon">❌</span>
+            <span className="stat-icon"></span>
             <div className="stat-info">
               <span className="stat-label">Rejetées</span>
               <span className="stat-value">{stats.rejetee}</span>
@@ -118,7 +118,7 @@ export default function AdminPanel() {
             className={`admin-tab ${activeTab === "en_attente" ? "active" : ""}`}
             onClick={() => setActiveTab("en_attente")}
           >
-            📥 À Valider
+             À Valider
             {stats.enAttente > 0 && (
               <span className="tab-badge">{stats.enAttente}</span>
             )}
@@ -127,13 +127,13 @@ export default function AdminPanel() {
             className={`admin-tab ${activeTab === "active" ? "active" : ""}`}
             onClick={() => setActiveTab("active")}
           >
-            ✅ Validées
+            Validées
           </button>
           <button
             className={`admin-tab ${activeTab === "rejetee" ? "active" : ""}`}
             onClick={() => setActiveTab("rejetee")}
           >
-            ❌ Rejetées
+             Rejetées
           </button>
         </div>
 
@@ -152,7 +152,7 @@ export default function AdminPanel() {
                   {a.photos?.[0]?.url ? (
                     <img src={a.photos[0].url} alt="" />
                   ) : (
-                    <div className="placeholder">🏠</div>
+                    <div className="placeholder"></div>
                   )}
                 </div>
 
