@@ -12,7 +12,46 @@
     margin: 0;
     padding: 0;
 }
+/* Styles pour le bouton de changement de thème */
+.theme-toggle-btn {
+    background: transparent;
+    border: 1px solid rgba(15, 23, 42, 0.08); /* Bordure fine très discrète */
+    width: 42px;
+    height: 42px;
+    border-radius: 12px; /* Coins arrondis style premium comme vos boutons d'avatars */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #0f172a; /* Couleur par défaut en mode clair */
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+}
 
+/* Effet de survol (Hover) Prestige */
+.theme-toggle-btn:hover {
+    color: #D4B996; /* Teinte beige doré prestige au survol */
+    background: rgba(212, 185, 150, 0.06); /* Léger halo beige transparent */
+    border-color: rgba(212, 185, 150, 0.3);
+    transform: translateY(-1px); /* Micro-interaction de soulèvement */
+}
+
+/* Effet d'activation par clic */
+.theme-toggle-btn:active {
+    transform: translateY(0);
+}
+
+/* Support adaptatif pour le mode sombre (si l'attribut est actif sur le HTML) */
+[data-theme="dark"] .theme-toggle-btn {
+    color: #f8fafc; /* L'icône devient blanche satinée en mode sombre */
+    border-color: rgba(248, 250, 252, 0.1);
+}
+
+[data-theme="dark"] .theme-toggle-btn:hover {
+    color: #D4B996;
+    background: rgba(212, 185, 150, 0.08);
+    border-color: rgba(212, 185, 150, 0.4);
+}
 /* Aligne le contenu à l'intérieur */
 .navbar-content {
     width: 100%;

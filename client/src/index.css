@@ -794,92 +794,6 @@ textarea.form-input {
 .text-danger  { color: var(--danger); }
 .text-success { color: var(--success); }
 .fw-600 { font-weight: 600; } .fw-700 { font-weight: 700; }
-
-/* client/src/index.css
-   Ajoutez ces variables AU DÉBUT de votre index.css existant
-   ----------------------------------------------------------- */
-
-/* ══════════════════════════════
-   THÈME CLAIR
-══════════════════════════════ */
-:root,
-[data-theme="light"] {
-  --color-primary:          #E8355A;
-  --color-primary-hover:    #c9234a;
-  --color-primary-soft:     #fde8ed;
-
-  --color-bg:               #ffffff;
-  --color-bg-secondary:     #fdf0f3;   /* fond hero rose pâle */
-  --color-bg-card:          #ffffff;
-  --color-bg-input:         #ffffff;
-
-  --color-text:             #1a1a2e;
-  --color-text-secondary:   #6b7280;
-  --color-text-muted:       #9ca3af;
-
-  --color-border:           #e5e7eb;
-  --color-border-focus:     #E8355A;
-
-  --color-navbar-bg:        #ffffff;
-  --color-navbar-shadow:    0 1px 8px rgba(0,0,0,0.06);
-
-  --color-pill-bg:          #ffffff;
-  --color-pill-border:      #d1d5db;
-  --color-pill-text:        #374151;
-  --color-pill-active-bg:   #1a1a2e;
-  --color-pill-active-text: #ffffff;
-
-  --color-card-shadow:      0 2px 12px rgba(0,0,0,0.07);
-  --color-card-shadow-hover:0 8px 28px rgba(232,53,90,0.13);
-
-  /* Toggle switch */
-  --toggle-track:           #e5e7eb;
-  --toggle-track-border:    #d1d5db;
-  --toggle-thumb:           #ffffff;
-  --toggle-icon-color:      #f59e0b;
-
-  --transition-theme: background-color 0.3s ease, color 0.3s ease,
-                      border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* ══════════════════════════════
-   THÈME SOMBRE
-══════════════════════════════ */
-[data-theme="dark"] {
-  --color-primary:          #ff4d72;
-  --color-primary-hover:    #ff2255;
-  --color-primary-soft:     #2a1019;
-
-  --color-bg:               #0f0f14;
-  --color-bg-secondary:     #14101a;
-  --color-bg-card:          #1a1a24;
-  --color-bg-input:         #1e1e2a;
-
-  --color-text:             #f0eff4;
-  --color-text-secondary:   #a09cb0;
-  --color-text-muted:       #6b6880;
-
-  --color-border:           #2e2e3e;
-  --color-border-focus:     #ff4d72;
-
-  --color-navbar-bg:        #0f0f14;
-  --color-navbar-shadow:    0 1px 8px rgba(0,0,0,0.5);
-
-  --color-pill-bg:          #1a1a24;
-  --color-pill-border:      #2e2e3e;
-  --color-pill-text:        #c0bdd0;
-  --color-pill-active-bg:   #ff4d72;
-  --color-pill-active-text: #ffffff;
-
-  --color-card-shadow:      0 2px 16px rgba(0,0,0,0.5);
-  --color-card-shadow-hover:0 8px 32px rgba(255,77,114,0.18);
-
-  --toggle-track:           #2e2e3e;
-  --toggle-track-border:    #3e3e50;
-  --toggle-thumb:           #ff4d72;
-  --toggle-icon-color:      #ffffff;
-}
-
 /* ══════════════════════════════
    BASE GLOBALE
 ══════════════════════════════ */
@@ -979,4 +893,19 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   border-color: var(--color-border-focus);
   outline: none;
+}
+/* Couleurs par défaut (Mode Clair) */
+:root, [data-theme="light"] {
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text: #0f172a;
+    --text-light: #64748b;
+}
+
+/* Couleurs alternatives automatiques (Mode Sombre) */
+[data-theme="dark"] {
+    --bg: #0f172a;
+    --card-bg: #1e293b;
+    --text: #f8fafc;
+    --text-light: #94a3b8;
 }
