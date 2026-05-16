@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../App";
 import "../styles/Messages.css";
+import { socket } from "../socket";
 
 export default function Messages() {
   const { api, token, user, navigate } = useAuth();
