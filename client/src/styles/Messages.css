@@ -1,6 +1,6 @@
 .chat-container-prestige {
-  height: calc(100vh - 120px);
-  padding: 10px 20px;
+  height: calc(100vh - 40px);
+  padding: 95px 20px 25px;
   background: var(--chat-bg);
   overflow: hidden;
 }
@@ -220,8 +220,8 @@
 
 @media (max-width: 768px) {
   .chat-container-prestige {
-    height: calc(100vh - 80px);
-    padding: 0;
+    height: calc(100vh - 40px);
+    padding: 75px 0 0;
   }
 
   .chat-window {

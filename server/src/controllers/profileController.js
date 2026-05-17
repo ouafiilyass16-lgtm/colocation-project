@@ -9,7 +9,8 @@ exports.getProfile = async (req, res) => {
       _id: user._id,
       nom: user.nom,
       email: user.email,
-      role: user.role
+      role: user.role,
+      photoUrl: user.photoUrl
     };
 
     if (user.role === "etudiant") {
@@ -77,6 +78,22 @@ exports.updateProprietaireProfile = async (req, res) => {
       proprietaireProfile: user.proprietaireProfile
     });
 
+  } catch (err) {
+    res.status(500).json({ msg: "Erreur serveur" });
+  }
+};
+
+// ─── Photo de profil ──────────────────────────────────────
+exports.updatePhoto = async (req, res) => {
+  try {
+    const { photoUrl } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { photoUrl },
+      { new: true }
+    ).select("-password");
+
+    res.json({ photoUrl: user.photoUrl });
   } catch (err) {
     res.status(500).json({ msg: "Erreur serveur" });
   }

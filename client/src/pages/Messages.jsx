@@ -149,7 +149,7 @@ export default function Messages() {
       return;
     }
 
-    console.log("📤 Envoi vers :", destinataireId, "| message :", newMessage.trim());
+    console.log(" Envoi vers :", destinataireId, "| message :", newMessage.trim());
 
     setSending(true);
     try {
@@ -247,7 +247,7 @@ export default function Messages() {
                   <span className="user-name">{selectedConv.interlocuteur?.nom}</span>
                   {selectedConv.annonce && (
                     <span className="annonce-ref">
-                      📋 {selectedConv.annonce.titre}
+                       {selectedConv.annonce.titre}
                     </span>
                   )}
                 </div>

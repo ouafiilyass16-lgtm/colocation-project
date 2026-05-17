@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
     default: "etudiant"
   },
 
+  photoUrl: {
+    type: String,
+    default: ""
+  },
   dateInscription: {
     type: Date,
     default: Date.now

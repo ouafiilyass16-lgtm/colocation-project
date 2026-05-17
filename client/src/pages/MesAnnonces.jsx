@@ -64,9 +64,11 @@ export default function MesAnnonces() {
             <h1 className="detail-main-title">Tableau de Bord</h1>
             <p className="subtitle-prestige">{annonces.length} annonce{annonces.length > 1 ? "s" : ""} publiée{annonces.length > 1 ? "s" : ""}</p>
           </div>
-          <button className="btn-send-premium" onClick={() => navigate("/create-annonce")}>
-            + Nouvelle annonce
-          </button>
+          {annonces.length === 0 && (
+            <button className="btn-send-premium" onClick={() => navigate("/create-annonce")}>
+              + Nouvelle annonce
+            </button>
+          )}
         </div>
 
         {/* Stats Grid */}

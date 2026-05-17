@@ -3,6 +3,7 @@ const router = express.Router();
 
 const {
   getProfile,
+  updatePhoto,
   updateEtudiantProfile,
   updateProprietaireProfile,
   updateAdminProfile
@@ -12,6 +13,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 router.get("/", authMiddleware, getProfile);
 
+router.put("/photo", authMiddleware, updatePhoto);
 router.put("/etudiant", authMiddleware, updateEtudiantProfile);
 router.put("/proprietaire", authMiddleware, updateProprietaireProfile);
 router.put("/admin", authMiddleware, updateAdminProfile);

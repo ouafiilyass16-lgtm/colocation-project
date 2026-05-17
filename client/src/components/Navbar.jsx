@@ -6,13 +6,24 @@ import mainLogo from "../styles/ChatGPT Image 14 mai 2026, 19_19_52.png";
 import "../styles/Navbar.css";
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout, api, token } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [annonceCount, setAnnonceCount] = useState(null);
   const dropRef = useRef(null);
+
+  useEffect(() => {
+    if (user?.role === "proprietaire" && token) {
+      api.get("/annonces/mes/annonces", token)
+        .then(data => setAnnonceCount(Array.isArray(data) ? data.length : 0))
+        .catch(() => setAnnonceCount(0));
+    } else {
+      setAnnonceCount(null);
+    }
+  }, [user, token]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -68,7 +79,7 @@ export default function Navbar() {
 
           {/* ── ACTIONS DROITE ── */}
           <div className="nav-actions">
-            {user?.role === "proprietaire" && (
+            {user?.role === "proprietaire" && annonceCount === 0 && (
               <button className="btn-publish" onClick={() => navigate("/create-annonce")}>
                 + Publier
               </button>

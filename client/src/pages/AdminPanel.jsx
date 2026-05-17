@@ -30,26 +30,11 @@ export default function AdminPanel() {
   const loadAdminData = async () => {
     setLoading(true);
     try {
-      // ── Chargement de la liste selon l'onglet ──
-      let list = [];
+      // ── Un seul appel API → on filtre côté client ──
+      const data = await api.get("/annonces/admin/toutes", token);
+      const all = Array.isArray(data) ? data : [];
 
-      if (activeTab === "en_attente") {
-        // Route dédiée pour les en_attente
-        const data = await api.get("/annonces/admin/en-attente", token);
-        list = Array.isArray(data) ? data : [];
-      } else {
-        // Route /admin/toutes?statut=active  OU  ?statut=rejetee
-        // Cette route retourne TOUTES les annonces filtrées par statut
-        const data = await api.get(`/annonces/admin/toutes?statut=${activeTab}`, token);
-        list = Array.isArray(data) ? data : [];
-      }
-
-      setAnnonces(list);
-
-      // ── Stats globales : on récupère tout pour compter ──
-      const allData = await api.get("/annonces/admin/toutes", token);
-      const all = Array.isArray(allData) ? allData : [];
-
+      setAnnonces(all.filter(a => a.statut === activeTab));
       setStats({
         enAttente: all.filter(a => a.statut === "en_attente").length,
         active:    all.filter(a => a.statut === "active").length,
