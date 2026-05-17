@@ -164,7 +164,7 @@ export default function Profile() {
       </div>
       <h3>Accès restreint</h3>
       <p>Veuillez vous connecter pour gérer votre profil.</p>
-      <button className="btn-prestige-gold" onClick={() => navigate("login")} style={{ marginTop: "20px" }}>
+      <button className="btn-prestige-gold" onClick={() => navigate("/login")} style={{ marginTop: "20px" }}>
         Se connecter
       </button>
     </div>
@@ -273,7 +273,7 @@ export default function Profile() {
                       <h3 className="section-title-prestige white">Contrôle Administrateur</h3>
                       <p>Gérez les annonces en attente et les utilisateurs de la plateforme.</p>
                     </div>
-                    <button className="btn-admin-go" onClick={() => navigate("admin")} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <button className="btn-admin-go" onClick={() => navigate("/admin")} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                       <span>Ouvrir le Panel</span>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>

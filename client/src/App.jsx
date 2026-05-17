@@ -1,10 +1,11 @@
-import { socket } from "./socket"; // 👈 Pris depuis la racine de src
+import { socket } from "./socket";
 import {
   useState,
   createContext,
   useContext,
-  useEffect, // 👈 Ajouté pour gérer le cycle de vie du socket
+  useEffect,
 } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -19,13 +20,14 @@ import Profile from "./pages/Profile";
 import AdminPanel from "./pages/AdminPanel";
 
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import FloatingThemeToggle from "./components/FloatingThemeToggle";
 
 export const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
 const API = "http://localhost:5000/api";
 
-// ── API helper — toutes les méthodes HTTP ──────────────────────
 export const api = {
   get: (path, token) =>
     fetch(`${API}${path}`, {
@@ -72,20 +74,15 @@ export const api = {
 export default function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const [page, setPage] = useState("home");
-  const [pageParams, setPageParams] = useState(null);
+  const navigate = useNavigate();
 
-  // ── SYNCHRONISATION AUTOMATIQUE SOCKET.IO ──
   useEffect(() => {
     if (user && token) {
-      // Connexion au serveur
       socket.connect();
-      // Enregistrement de l'utilisateur connecté dans la Map globale du serveur
       socket.emit("register", user._id);
     }
 
     return () => {
-      // Déconnexion propre si l'utilisateur quitte ou ferme l'application
       socket.disconnect();
     };
   }, [user, token]);
@@ -95,46 +92,39 @@ export default function App() {
     setToken(t);
     localStorage.setItem("user", JSON.stringify(u));
     localStorage.setItem("token", t);
-    setPage("home");
+    navigate("/");
   };
 
   const logout = () => {
-    socket.disconnect(); // 👈 Coupe le tunnel réseau immédiatement
+    socket.disconnect();
     setUser(null);
     setToken(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    setPage("login");
-  };
-
-  const navigate = (p, params = null) => {
-    setPage(p);
-    setPageParams(params);
-    window.scrollTo(0, 0);
-  };
-
-  const renderPage = () => {
-    switch (page) {
-      case "home":            return <Home />;
-      case "login":           return <Login />;
-      case "register":        return <Register />;
-      case "annonce-detail":  return <AnnonceDetail id={pageParams} />;;
-      case "create-annonce":  return <CreateAnnonce />;;
-      case "modifier-annonce":return <ModifierAnnonce id={pageParams} />;;
-      case "mes-annonces":    return <MesAnnonces />;;
-      case "favoris":         return <Favoris />;;
-      case "messages":        return <Messages />;;
-      case "profile":         return <Profile />;;
-      case "admin":           return <AdminPanel />;;
-      default:                return <Home />;;
-    }
+    navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, navigate, api, page }}>
-      <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
+    <AuthContext.Provider value={{ user, token, login, logout, navigate, api }}>
+      <div style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", flexDirection: "column" }}>
         <Navbar />
-        {renderPage()}
+        <div style={{ flex: 1 }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/annonce/:id" element={<AnnonceDetail />} />
+            <Route path="/create-annonce" element={<CreateAnnonce />} />
+            <Route path="/modifier-annonce/:id" element={<ModifierAnnonce />} />
+            <Route path="/mes-annonces" element={<MesAnnonces />} />
+            <Route path="/favoris" element={<Favoris />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/admin" element={<AdminPanel />} />
+          </Routes>
+        </div>
+        <Footer />
+        <FloatingThemeToggle />
       </div>
     </AuthContext.Provider>
   );

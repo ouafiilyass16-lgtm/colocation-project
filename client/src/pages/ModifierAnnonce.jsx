@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../App";
 import "../styles/CreateAnnonce.css";
 
@@ -34,9 +35,11 @@ const STEPS = [
 
 const VILLES_LIST = ["Casablanca", "Rabat", "Marrakech", "Fès", "Agadir", "Tanger", "Meknès", "Oujda", "Tétouan", "Kénitra"];
 
-export default function ModifierAnnonce({ id }) {
+export default function ModifierAnnonce() {
+  const { id } = useParams();
   const { api, token, navigate } = useAuth();
   const [step, setStep] = useState(1);
+
   const [form, setForm] = useState({
     titre: "", description: "", prix: "", ville: "",
     typeLogement: "appartement", surface: "", dateDisponibilite: "",
@@ -134,7 +137,7 @@ export default function ModifierAnnonce({ id }) {
         await api.post(`/annonces/${id}/photos`, { photos: photosPayload }, token);
       }
 
-      navigate("mes-annonces");
+      navigate("/mes-annonces");
     } catch (err) {
       setError(err.message || "Une erreur est survenue");
     } finally {
@@ -146,7 +149,7 @@ export default function ModifierAnnonce({ id }) {
     <div className="create-annonce-wrapper">
       <div className="container" style={{ maxWidth: 800, paddingTop: 20 }}>
         
-        <button onClick={() => navigate("mes-annonces")} className="btn-back-premium">
+        <button onClick={() => navigate("/mes-annonces")} className="btn-back-premium">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
@@ -266,7 +269,7 @@ export default function ModifierAnnonce({ id }) {
 
         {/* NOUVELLE ACCORDANCE FOOTER */}
         <div className="navigation-footer-prestige" style={{ marginTop: 32, display: 'flex', justifyContent: 'space-between' }}>
-          <button className="btn-secondary-prestige" onClick={() => step > 1 ? setStep(s => s - 1) : navigate("mes-annonces")}>
+          <button className="btn-secondary-prestige" onClick={() => step > 1 ? setStep(s => s - 1) : navigate("/mes-annonces")}>
             {step === 1 ? "Annuler" : "← Précédent"}
           </button>
 

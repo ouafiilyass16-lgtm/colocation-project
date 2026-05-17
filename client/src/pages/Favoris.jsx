@@ -40,8 +40,8 @@ export default function Favoris() {
         </svg>
       </div>
       <h3 className="section-title-premium" style={{ justifyContent: 'center' }}>Connexion requise</h3>
-      <p style={{ color: '#64748B', marginBottom: 24 }}>Connectez-vous pour accéder à vos annonces sauvegardées.</p>
-      <button className="btn-send-premium" onClick={() => navigate("login")} style={{ width: 'auto', padding: '14px 40px' }}>
+      <p style={{ color: 'var(--text3)', marginBottom: 24 }}>Connectez-vous pour accéder à vos annonces sauvegardées.</p>
+      <button className="btn-send-premium" onClick={() => navigate("/login")} style={{ width: 'auto', padding: '14px 40px' }}>
         Se connecter
       </button>
     </div>
@@ -72,8 +72,8 @@ export default function Favoris() {
               </svg>
             </div>
             <h3 className="section-title-premium" style={{ justifyContent: 'center' }}>Votre liste est vide</h3>
-            <p style={{ color: '#64748B', marginBottom: 30 }}>Explorez nos résidences et cliquez sur le cœur pour les retrouver ici.</p>
-            <button className="btn-send-premium" onClick={() => navigate("home")} style={{ width: 'auto', padding: '14px 40px' }}>
+            <p style={{ color: 'var(--text3)', marginBottom: 30 }}>Explorez nos résidences et cliquez sur le cœur pour les retrouver ici.</p>
+            <button className="btn-send-premium" onClick={() => navigate("/")} style={{ width: 'auto', padding: '14px 40px' }}>
               Explorer les résidences
             </button>
           </div>

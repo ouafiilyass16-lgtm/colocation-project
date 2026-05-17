@@ -1,51 +1,44 @@
-/* ============================================================
-   MESSAGES — Layout avec scroll correct
-   ============================================================ */
-
-/* 1. Container principal — hauteur fixe, pas de scroll global */
 .chat-container-prestige {
   height: calc(100vh - 120px);
   padding: 10px 20px;
-  background: #f0f2f5;
-  overflow: hidden;       /* ← bloque le scroll de la page entière */
+  background: var(--chat-bg);
+  overflow: hidden;
 }
 
-/* 2. Fenêtre — grille 2 colonnes, hauteur 100% du container */
 .chat-window {
   display: grid;
   grid-template-columns: 320px 1fr;
-  height: 100%;           /* ← prend toute la hauteur disponible */
-  background: white;
+  height: 100%;
+  background: var(--surface);
   border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  overflow: hidden;       /* ← clip les enfants qui dépassent */
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
 }
 
-/* ── SIDEBAR ─────────────────────────────────────────────── */
 .chat-sidebar {
-  border-right: 1px solid #e2e8f0;
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  height: 100%;           /* ← hauteur complète de la grille */
+  height: 100%;
   overflow: hidden;
 }
 
 .sidebar-header {
-  flex-shrink: 0;         /* ← ne rétrécit jamais */
+  flex-shrink: 0;
   padding: 20px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .sidebar-header h3 {
   font-family: 'Fraunces', serif;
-  color: #0f172a;
+  color: var(--text);
   margin: 0;
 }
 
 .conv-list {
   flex: 1;
-  overflow-y: auto;       /* ← scroll uniquement dans la liste */
-  min-height: 0;          /* ← CRITIQUE : permet à flex de rétrécir */
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .conv-item {
@@ -54,21 +47,21 @@
   padding: 15px 20px;
   cursor: pointer;
   transition: background 0.15s;
-  border-bottom: 1px solid #f8fafc;
+  border-bottom: 1px solid var(--bg);
 }
 
-.conv-item:hover { background: #f8fafc; }
+.conv-item:hover { background: var(--bg); }
 .conv-item.active {
-  background: #f0f4ff;
-  border-left: 4px solid #d4b996;
+  background: var(--accent-hover-bg);
+  border-left: 4px solid var(--accent);
 }
 
 .avatar-small {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background: #0f172a;
-  color: #d4b996;
+  background: var(--text);
+  color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,49 +71,46 @@
 }
 
 .conv-info { min-width: 0; }
-.conv-info .name    { font-weight: 700; color: #0f172a; font-size: 14px; }
+.conv-info .name    { font-weight: 700; color: var(--text); font-size: 14px; }
 .conv-info .last-msg {
   font-size: 12px;
-  color: #64748b;
+  color: var(--text3);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* ── ZONE CHAT PRINCIPALE ────────────────────────────────── */
 .chat-main {
   display: flex;
   flex-direction: column;
-  height: 100%;           /* ← hauteur complète */
-  overflow: hidden;       /* ← CRITIQUE : empêche le débordement */
-  background: #e5ddd5;
+  height: 100%;
+  overflow: hidden;
+  background: var(--chat-main-bg);
 }
 
 .chat-header {
-  flex-shrink: 0;         /* ← ne rétrécit jamais */
-  background: #f0f2f5;
+  flex-shrink: 0;
+  background: var(--chat-header-bg);
   padding: 15px 25px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
 }
 
 .header-info { display: flex; flex-direction: column; gap: 2px; }
-.user-name   { font-weight: 800; color: #0f172a; font-size: 15px; }
-.annonce-ref { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+.user-name   { font-weight: 800; color: var(--text); font-size: 15px; }
+.annonce-ref { font-size: 11px; color: var(--text3); font-weight: 600; text-transform: uppercase; }
 
-/* ── MESSAGES — la zone qui scrolle ─────────────────────── */
 .chat-messages {
-  flex: 1;                /* ← prend tout l'espace restant */
-  overflow-y: auto;       /* ← SCROLL ICI et nulle part ailleurs */
-  min-height: 0;          /* ← CRITIQUE : sans ça flex ignore overflow */
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-/* Scrollbar stylisée */
 .chat-messages::-webkit-scrollbar { width: 5px; }
 .chat-messages::-webkit-scrollbar-track { background: transparent; }
 .chat-messages::-webkit-scrollbar-thumb {
@@ -128,7 +118,6 @@
   border-radius: 10px;
 }
 
-/* ── BULLES ──────────────────────────────────────────────── */
 .message-bubble {
   max-width: 72%;
   padding: 8px 12px 6px;
@@ -141,21 +130,20 @@
 
 .message-bubble.sent {
   align-self: flex-end;
-  background: #dcf8c6;
-  color: #0f172a;
+  background: var(--chat-bubble-sent);
+  color: var(--text);
   border-top-right-radius: 2px;
 }
 
 .message-bubble.received {
   align-self: flex-start;
-  background: white;
-  color: #0f172a;
+  background: var(--chat-bubble-received);
+  color: var(--text);
   border-top-left-radius: 2px;
 }
 
 .message-bubble p { margin: 0 0 2px 0; }
 
-/* Footer de la bulle : heure + statut */
 .msg-status-row {
   display: flex;
   align-items: center;
@@ -172,25 +160,24 @@
 
 .read-status {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--text4);
   letter-spacing: -2px;
   line-height: 1;
 }
 
 .read-status.is-read {
-  color: #D4B996;
+  color: var(--accent);
   font-weight: 700;
 }
 
-/* ── INPUT ───────────────────────────────────────────────── */
 .chat-input-area {
-  flex-shrink: 0;         /* ← reste en bas, ne rétrécit jamais */
+  flex-shrink: 0;
   padding: 12px 20px;
-  background: #f0f2f5;
+  background: var(--chat-header-bg);
   display: flex;
   gap: 12px;
   align-items: center;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border);
 }
 
 .chat-input-area input {
@@ -200,13 +187,14 @@
   border: none;
   outline: none;
   font-size: 14px;
-  background: white;
+  background: var(--surface);
+  color: var(--text);
   font-family: 'DM Sans', sans-serif;
 }
 
 .btn-chat-send {
-  background: #0f172a;
-  color: #d4b996;
+  background: var(--text);
+  color: var(--accent);
   border: none;
   width: 44px;
   height: 44px;
@@ -221,17 +209,15 @@
 
 .btn-chat-send:hover { opacity: 0.85; }
 
-/* ── EMPTY STATES ────────────────────────────────────────── */
 .empty-chat {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text4);
   font-size: 15px;
 }
 
-/* ── RESPONSIVE ──────────────────────────────────────────── */
 @media (max-width: 768px) {
   .chat-container-prestige {
     height: calc(100vh - 80px);
@@ -243,7 +229,6 @@
     border-radius: 0;
   }
 
-  /* Sur mobile : masque la sidebar quand une conv est ouverte */
   .chat-sidebar { display: none; }
   .chat-main    { display: flex; }
 }

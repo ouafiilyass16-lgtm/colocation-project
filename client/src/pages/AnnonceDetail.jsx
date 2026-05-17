@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../App";
-import "../styles/AnnonceDetail.css"; // 👈 Importation du nouveau fichier de styles
+import "../styles/AnnonceDetail.css";
 
-export default function AnnonceDetail({ id }) {
+export default function AnnonceDetail() {
+  const { id } = useParams();
   const { api, token, user, navigate } = useAuth();
   const [annonce, setAnnonce] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,7 +24,7 @@ export default function AnnonceDetail({ id }) {
 
   const sendMessage = async () => {
     if (!msgForm.trim()) return;
-    if (!token) { navigate("login"); return; }
+    if (!token) { navigate("/login"); return; }
     const res = await api.post("/messages", {
       destinataireId: annonce.proprietaire._id,
       contenu: msgForm,
@@ -36,15 +38,15 @@ export default function AnnonceDetail({ id }) {
 
   if (loading) return (
     <div className="page-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ width: 40, height: 40, border: "3px solid #E6E1DA", borderTop: "3px solid #C4B5A0", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+      <div style={{ width: 40, height: 40, border: "3px solid var(--border)", borderTop: "3px solid var(--accent)", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
     </div>
   );
 
   if (!annonce) return (
     <div className="container empty-state" style={{ paddingTop: 80, textAlign: "center" }}>
-      <div className="empty-icon" style={{ fontSize: 48, color: "#C4B5A0" }}>🔍</div>
-      <h3 style={{ fontWeight: 500, color: "#4A453E", marginTop: 16 }}>Annonce introuvable</h3>
-      <button className="btn" onClick={() => navigate("home")} style={{ marginTop: 24, padding: "12px 24px", background: "#D4C9B9", color: "#4A453E", border: "none", borderRadius: 8, fontWeight: 600, cursor: "pointer" }}>
+      <div className="empty-icon" style={{ fontSize: 48, color: "var(--text4)" }}>🔍</div>
+      <h3 style={{ fontWeight: 500, color: "var(--text)", marginTop: 16 }}>Annonce introuvable</h3>
+      <button className="btn" onClick={() => navigate("/")} style={{ marginTop: 24, padding: "12px 24px", background: "var(--accent)", color: "var(--text)", border: "none", borderRadius: 8, fontWeight: 600, cursor: "pointer" }}>
         Retour aux annonces
       </button>
     </div>
@@ -57,7 +59,7 @@ export default function AnnonceDetail({ id }) {
       
       {/* ── Header Navigation ── */}
       <div className="container" style={{ paddingTop: 32, paddingBottom: 0 }}>
-        <button onClick={() => navigate("home")} className="detail-header-btn">
+        <button onClick={() => navigate("/")} className="detail-header-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
           Retour à la liste
         </button>
@@ -120,7 +122,7 @@ export default function AnnonceDetail({ id }) {
         {photos.length > 3 && (
           <div className="thumbnail-strip">
             {photos.map((p, i) => (
-              <div key={i} onClick={() => setActivePhoto(i)} className="strip-thumb-box" style={{ border: `2px solid ${activePhoto === i ? "#C4B5A0" : "transparent"}` }}>
+              <div key={i} onClick={() => setActivePhoto(i)} className="strip-thumb-box" style={{ border: `2px solid ${activePhoto === i ? "var(--accent2)" : "transparent"}` }}>
                 {p?.url && <img src={p.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
               </div>
             ))}
@@ -177,12 +179,12 @@ export default function AnnonceDetail({ id }) {
             <div className="owner-info-card">
               <h3 className="section-subtitle" style={{ fontSize: 18, marginBottom: 16 }}>Informations de contact</h3>
               <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#D4C9B9", border: "1px solid #C4B5A0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 600, color: "#4A453E" }}>
+                <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--bg2)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 600, color: "var(--text)" }}>
                   {annonce.proprietaire?.nom?.[0]?.toUpperCase()}
                 </div>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: 15, color: "#2E2A25" }}>{annonce.proprietaire?.nom}</div>
-                  <div style={{ fontSize: 13, color: "#7A746B", marginTop: 2 }}>{annonce.proprietaire?.email}</div>
+                  <div style={{ fontWeight: 600, fontSize: 15, color: "var(--text)" }}>{annonce.proprietaire?.nom}</div>
+                  <div style={{ fontSize: 13, color: "var(--text3)", marginTop: 2 }}>{annonce.proprietaire?.email}</div>
                 </div>
               </div>
             </div>
@@ -227,7 +229,7 @@ export default function AnnonceDetail({ id }) {
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                         Écrire au propriétaire
                       </p>
-                      {msgError && <div style={{ padding: 12, background: "#FCEFEF", color: "#A83232", borderRadius: 8, fontSize: 13, marginBottom: 12 }}>{msgError}</div>}
+                      {msgError && <div style={{ padding: 12, background: "var(--danger-bg)", color: "var(--danger)", borderRadius: 8, fontSize: 13, marginBottom: 12 }}>{msgError}</div>}
                       <textarea
                         className="form-textarea-beige"
                         placeholder="Bonjour, je suis très intéressé(e) par votre offre de colocation..."
@@ -237,8 +239,8 @@ export default function AnnonceDetail({ id }) {
                       <button
                         className="btn-send-beige"
                         style={{
-                          background: msgForm.trim() ? "#D4C9B9" : "#E6E1DA",
-                          color: msgForm.trim() ? "#2E2A25" : "#A69F95",
+                          background: msgForm.trim() ? "var(--accent)" : "var(--bg3)",
+                          color: msgForm.trim() ? "var(--text)" : "var(--text4)",
                           cursor: msgForm.trim() ? "pointer" : "not-allowed",
                         }}
                         onClick={sendMessage}
@@ -251,7 +253,7 @@ export default function AnnonceDetail({ id }) {
                   )}
                 </div>
               ) : !user ? (
-                <button className="btn-connect-beige" onClick={() => navigate("login")}>
+                <button className="btn-connect-beige" onClick={() => navigate("/login")}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h4M10 17l5-5-5-5M13 12H3"/></svg>
                   Se connecter pour contacter
                 </button>
@@ -261,7 +263,7 @@ export default function AnnonceDetail({ id }) {
                 </div>
               ) : null}
 
-              <p style={{ fontSize: 12, color: "#A69F95", textAlign: "center", marginTop: 16, letterSpacing: "0.2px" }}>
+              <p style={{ fontSize: 12, color: "var(--text4)", textAlign: "center", marginTop: 16, letterSpacing: "0.2px" }}>
                 Aucun frais de commission de service
               </p>
             </div>
@@ -274,13 +276,15 @@ export default function AnnonceDetail({ id }) {
 }
 
 function StatusBadge({ status }) {
+  const vars = document.documentElement.style;
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
   const map = {
-    active: { bg: "#EDF7ED", txt: "#1C733C", label: "Disponible" },
-    en_attente: { bg: "#FFF4E5", txt: "#B76E00", label: "Vérification en cours" },
-    rejetee: { bg: "#FCEFEF", txt: "#A83232", label: "Refusée" },
-    archivee: { bg: "#F1EDE6", txt: "#7A746B", label: "Archivée" },
+    active: { bg: isDark ? "#0a2e1a" : "#EDF7ED", txt: isDark ? "#6fcf97" : "#1C733C", label: "Disponible" },
+    en_attente: { bg: isDark ? "#2e2200" : "#FFF4E5", txt: isDark ? "#f0ad4e" : "#B76E00", label: "Vérification en cours" },
+    rejetee: { bg: isDark ? "#2e0a0a" : "#FCEFEF", txt: isDark ? "#f87171" : "#A83232", label: "Refusée" },
+    archivee: { bg: isDark ? "#1e293b" : "#F1EDE6", txt: isDark ? "#94a3b8" : "#7A746B", label: "Archivée" },
   };
-  const current = map[status] || { bg: "#F1EDE6", txt: "#7A746B", label: status };
+  const current = map[status] || { bg: isDark ? "#1e293b" : "#F1EDE6", txt: isDark ? "#94a3b8" : "#7A746B", label: status };
   
   return (
     <span style={{ display: "inline-flex", alignItems: "center", padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 600, background: current.bg, color: current.txt }}>

@@ -2,275 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=DM+Sans:wght@400;500;700&display=swap');
 
 :root {
-  /* Palette Signature : Or Sablé, Anthracite et Blanc Cassé */
-  --skyline-gold: #967b4c;
-  --skyline-gold-light: #b59a6d;
-  --skyline-dark: #1a1a1a;
-  --skyline-text: #2c2c2c;
-  --skyline-gray: #f4f1ea; /* Teinte sable très légère pour le fond */
   --font-display: 'Fraunces', serif;
   --font-body: 'DM Sans', sans-serif;
-}
-
-/* --- Global --- */
-body {
-  background-color: var(--skyline-gray);
-  color: var(--skyline-text);
-  font-family: var(--font-body);
-}
-
-/* --- NAVBAR HARMONISÉE --- */
-.navbar {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border-bottom: 1px solid rgba(150, 123, 76, 0.2);
-  backdrop-filter: blur(10px);
-}
-
-.nav-link {
-  color: var(--skyline-dark) !important;
-  font-weight: 500;
-  text-transform: uppercase;
-  font-size: 13px;
-  letter-spacing: 1px;
-}
-
-.nav-link:hover {
-  color: var(--skyline-gold) !important;
-}
-
-/* --- HERO SECTION (Image Étudiante/Luxe) --- */
-.skyline-hero {
-  height: 80vh;
-  /* Image d'une bibliothèque moderne ou résidence étudiante haut de gamme */
-  background-image: linear-gradient(rgba(26, 26, 26, 0.4), rgba(26, 26, 26, 0.4)), 
-                    url('https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1600&q=80');
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-
-/* --- ANNONCE CARDS (Nouveau Look) --- */
-.listing-card {
-  background: white;
-  border: 1px solid rgba(150, 123, 76, 0.15);
-  border-radius: 4px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden;
-}
-
-.listing-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(150, 123, 76, 0.1);
-  border-color: var(--skyline-gold);
-}
-
-.listing-card__img-wrap {
-  height: 220px;
-  position: relative;
-}
-
-.listing-card__price {
-  font-family: var(--font-display);
-  color: var(--skyline-gold);
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.listing-card__title {
-  font-family: var(--font-display);
-  font-size: 18px;
-  color: var(--skyline-dark);
-  margin-bottom: 8px;
-}
-
-.listing-card__badge {
-  background: var(--skyline-gold);
-  color: white;
-  padding: 4px 12px;
-  font-size: 11px;
-  text-transform: uppercase;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-/* --- BARRE DE RECHERCHE --- */
-.skyline-search-container {
-  background: white;
-  border-bottom: 4px solid var(--skyline-gold);
-  border-radius: 2px;
-}
-
-.skyline-btn {
-  background: var(--skyline-gold);
-  transition: background 0.3s ease;
-}
-
-.skyline-btn:hover {
-  background: var(--skyline-dark);
-}
-/* --- BARRE DE RECHERCHE DOUCE & ÉLÉGANTE --- */
-
-.skyline-search-container {
-  background: #ffffff;
-  display: flex;
-  width: 92%;
-  max-width: 1100px;
-  /* Ombre plus douce et plus large pour un effet "cloud" */
-  box-shadow: 0 10px 40px rgba(150, 123, 76, 0.12); 
-  /* Arrondi léger pour casser la rigidité sans perdre le côté premium */
-  border-radius: 12px; 
-  overflow: hidden;
-  margin: -40px auto 0; /* Pour qu'elle chevauche légèrement le hero */
-  position: relative;
-  z-index: 10;
-  border: 1px solid rgba(150, 123, 76, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.skyline-search-container:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 50px rgba(150, 123, 76, 0.18);
-}
-
-.search-field-group {
-  flex: 1;
-  padding: 22px 30px;
-  border-right: 1px solid rgba(150, 123, 76, 0.1);
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  transition: background 0.3s ease;
-}
-
-/* Effet au survol d'un champ spécifique */
-.search-field-group:hover {
-  background: rgba(1, 2, 29, 0.4); /* --skyline-gray très léger */
-}
-
-.search-field-group:last-of-type {
-  border-right: none;
-}
-
-.search-field-group label {
-  display: block;
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--skyline-gold); /* Label en doré pour plus de douceur que le gris */
-  margin-bottom: 6px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  opacity: 0.8;
-}
-
-.search-field-group input, 
-.search-field-group select {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 16px;
-  font-family: var(--font-body); /* Passage en DM Sans pour plus de modernité */
-  color: var(--skyline-dark);
-  background: transparent;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.search-field-group input::placeholder {
-  color: #bbb;
-  font-weight: 400;
-}
-
-/* --- BOUTON DE RECHERCHE AFFINÉ --- */
-.skyline-btn {
-  background: var(--skyline-gold);
-  color: #ffffff;
-  border: none;
-  padding: 0 50px;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-  white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-}
-
-.skyline-btn:hover {
-  background: var(--skyline-dark);
-  color: var(--skyline-gold);
-  padding: 0 55px; /* Petit effet d'élargissement */
-}
-
-/* Ajustement pour mobile pour garder la douceur */
-@media (max-width: 850px) {
-  .skyline-search-container {
-    flex-direction: column;
-    border-radius: 15px;
-    margin-top: 20px;
-  }
-  .search-field-group {
-    border-right: none;
-    border-bottom: 1px solid rgba(150, 123, 76, 0.1);
-    padding: 15px 25px;
-  }
-  .skyline-btn {
-    padding: 20px;
-    font-size: 14px;
-  }
-}
-
-/* 5. TITRES DE SECTIONS (Nos Chambres / Logements) */
-.section-intro {
-  text-align: center;
-  margin: 80px 0 50px;
-}
-
-.section-intro h2 {
-  font-family: var(--font-display);
-  font-size: 38px;
-  color: var(--skyline-dark);
-  font-weight: 400;
-  margin-bottom: 15px;
-}
-
-.gold-divider {
-  width: 50px;
-  height: 2px;
-  background: var(--skyline-gold);
-  margin: 0 auto 25px;
-}
-
-.section-intro p {
-  color: #666;
-  font-family: var(--font-body);
-  font-size: 16px;
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-/* 6. ADAPTATION MOBILE */
-@media (max-width: 850px) {
-  .skyline-search-container {
-    flex-direction: column;
-    width: 95%;
-  }
-  .search-field-group {
-    border-right: none;
-    border-bottom: 1px solid #eee;
-  }
-  .skyline-btn {
-    padding: 20px;
-  }
 }
 
 /* ── Base ── */
@@ -319,83 +52,7 @@ a:hover { text-decoration: underline; }
 
 .page { padding-top: 32px; padding-bottom: 80px; }
 
-/* ── Navbar (Airbnb-style) ── */
-nav.airbnb-nav {
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  height: var(--navbar-height);
-}
 
-/* ── Cards ── */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition: var(--transition);
-}
-
-/* ── Listing Card (Airbnb style) ── */
-.listing-card {
-  background: transparent;
-  border: none;
-  border-radius: var(--radius);
-  overflow: hidden;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.listing-card:hover .listing-card__img-wrap {
-  transform: scale(1.01);
-}
-.listing-card__img-wrap {
-  border-radius: var(--radius);
-  overflow: hidden;
-  aspect-ratio: 4/3;
-  background: var(--bg3);
-  transition: transform 0.3s ease;
-  position: relative;
-}
-.listing-card__img-wrap img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  transition: transform 0.4s ease;
-}
-.listing-card:hover .listing-card__img-wrap img {
-  transform: scale(1.04);
-}
-.listing-card__body {
-  padding: 12px 2px 0;
-}
-.listing-card__title {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--text);
-  line-height: 1.3;
-  margin-bottom: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.listing-card__sub {
-  font-size: 14px;
-  color: var(--text3);
-  margin-bottom: 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.listing-card__price {
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--text);
-}
-.listing-card__price span {
-  font-weight: 400;
-  color: var(--text3);
-}
 
 /* ── Buttons ── */
 .btn {
@@ -799,12 +456,6 @@ textarea.form-input {
 ══════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; }
 
-body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  transition: var(--transition-theme);
-}
-
 /* ══════════════════════════════
    TOGGLE SWITCH
 ══════════════════════════════ */
@@ -840,72 +491,168 @@ body {
   transform: translateX(24px);
 }
 
-/* ══════════════════════════════
-   CLASSES UTILITAIRES
-   (à utiliser dans vos composants)
-══════════════════════════════ */
-
-/* Navbar */
 .navbar {
-  background-color: var(--color-navbar-bg);
-  box-shadow: var(--color-navbar-shadow);
+  background-color: var(--navbar-bg);
+  box-shadow: var(--navbar-shadow);
   transition: var(--transition-theme);
 }
 
-/* Cards */
 .card {
-  background-color: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--color-card-shadow);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
   transition: var(--transition-theme), box-shadow 0.2s ease;
 }
 .card:hover {
-  box-shadow: var(--color-card-shadow-hover);
+  box-shadow: var(--shadow-md);
 }
 
-/* Pills/Tags de ville */
 .pill {
-  background-color: var(--color-pill-bg);
-  border: 1px solid var(--color-pill-border);
-  color: var(--color-pill-text);
+  background-color: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--text3);
   transition: var(--transition-theme);
   cursor: pointer;
 }
 .pill.active, .pill:hover {
-  background-color: var(--color-pill-active-bg);
-  color: var(--color-pill-active-text);
-  border-color: var(--color-pill-active-bg);
+  background-color: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
 }
 
-/* Section hero */
 .hero-section {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg);
   transition: var(--transition-theme);
 }
 
-/* Inputs */
 input, select, textarea {
-  background-color: var(--color-bg-input);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
+  background-color: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
   transition: var(--transition-theme);
 }
 input:focus, select:focus, textarea:focus {
-  border-color: var(--color-border-focus);
+  border-color: var(--accent);
   outline: none;
 }
-/* Couleurs par défaut (Mode Clair) */
 :root, [data-theme="light"] {
-    --bg: #f8fafc;
-    --card-bg: #ffffff;
-    --text: #0f172a;
-    --text-light: #64748b;
+  --bg: #f8fafc;
+  --bg2: #f1f5f9;
+  --bg3: #e2e8f0;
+  --surface: #ffffff;
+  --surface2: #f8fafc;
+  --navbar-bg: rgba(255,255,255,0.95);
+  --navbar-bg-scrolled: rgba(255,255,255,0.95);
+  --navbar-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  --navbar-shadow-scrolled: 0 4px 20px rgba(15,23,42,0.05);
+
+  --text: #0f172a;
+  --text2: #475569;
+  --text3: #64748b;
+  --text4: #94a3b8;
+
+  --accent: #D4B996;
+  --accent2: #967b4c;
+  --accent-hover-bg: rgba(212,185,150,0.1);
+  --accent-hover-border: rgba(212,185,150,0.3);
+
+  --border: #E2E8F0;
+  --border2: #cbd5e1;
+  --border-light: rgba(15,23,42,0.05);
+  --border-lighter: rgba(15,23,42,0.08);
+  --border-lightest: rgba(15,23,42,0.1);
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
+  --shadow-sketch: 8px 8px 0px rgba(15,23,42,0.02), 16px 16px 0px rgba(212,185,150,0.1);
+  --shadow-sketch-sm: 4px 4px 0px rgba(15,23,42,0.02);
+  --shadow-sketch-gold: 8px 8px 0px rgba(212,185,150,0.2);
+  --shadow-gold: 0 4px 15px rgba(212,185,150,0.3);
+
+  --danger: #EF4444;
+  --danger-bg: #FEF2F2;
+  --danger-border: #FEE2E2;
+  --success: #10B981;
+  --success-bg: #ECFDF5;
+  --success-border: #B7E1CD;
+
+  --hero-overlay: rgba(15,23,42,0.7);
+  --hero-overlay2: rgba(15,23,42,0.35);
+  --hero-text: #ffffff;
+  --hero-accent: #D4B996;
+
+  --chat-bg: #f0f2f5;
+  --chat-main-bg: #e5ddd5;
+  --chat-bubble-sent: #dcf8c6;
+  --chat-bubble-received: #ffffff;
+  --chat-header-bg: #f0f2f5;
+
+  --toggle-track: #e2e8f0;
+  --toggle-track-border: #cbd5e1;
+  --toggle-thumb: #ffffff;
+  --toggle-icon-color: #0f172a;
+
+  --transition-theme: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Couleurs alternatives automatiques (Mode Sombre) */
 [data-theme="dark"] {
-    --bg: #0f172a;
-    --card-bg: #1e293b;
-    --text: #f8fafc;
-    --text-light: #94a3b8;
+  --bg: #0f172a;
+  --bg2: #1e293b;
+  --bg3: #334155;
+  --surface: #1e293b;
+  --surface2: #0f172a;
+  --navbar-bg: rgba(15,23,42,0.95);
+  --navbar-bg-scrolled: rgba(15,23,42,0.95);
+  --navbar-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  --navbar-shadow-scrolled: 0 4px 20px rgba(0,0,0,0.3);
+
+  --text: #f8fafc;
+  --text2: #cbd5e1;
+  --text3: #94a3b8;
+  --text4: #64748b;
+
+  --accent: #D4B996;
+  --accent2: #b59a6d;
+  --accent-hover-bg: rgba(212,185,150,0.15);
+  --accent-hover-border: rgba(212,185,150,0.4);
+
+  --border: rgba(248,250,252,0.1);
+  --border2: rgba(248,250,252,0.2);
+  --border-light: rgba(248,250,252,0.05);
+  --border-lighter: rgba(248,250,252,0.08);
+  --border-lightest: rgba(248,250,252,0.1);
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.4);
+  --shadow-sketch: 8px 8px 0px rgba(0,0,0,0.15), 16px 16px 0px rgba(212,185,150,0.08);
+  --shadow-sketch-sm: 4px 4px 0px rgba(0,0,0,0.1);
+  --shadow-sketch-gold: 8px 8px 0px rgba(212,185,150,0.1);
+  --shadow-gold: 0 4px 15px rgba(212,185,150,0.15);
+
+  --danger: #F87171;
+  --danger-bg: rgba(248,113,113,0.1);
+  --danger-border: rgba(248,113,113,0.2);
+  --success: #34D399;
+  --success-bg: rgba(52,211,153,0.1);
+  --success-border: rgba(52,211,153,0.2);
+
+  --hero-overlay: rgba(15,23,42,0.7);
+  --hero-overlay2: rgba(15,23,42,0.35);
+  --hero-text: #ffffff;
+  --hero-accent: #D4B996;
+
+  --chat-bg: #1a1a2e;
+  --chat-main-bg: #16213e;
+  --chat-bubble-sent: #1e3a5f;
+  --chat-bubble-received: #2d3748;
+  --chat-header-bg: #1e293b;
+
+  --toggle-track: #334155;
+  --toggle-track-border: #475569;
+  --toggle-thumb: #D4B996;
+  --toggle-icon-color: #0f172a;
+
+  --transition-theme: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }

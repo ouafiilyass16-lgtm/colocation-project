@@ -17,7 +17,7 @@ export default function AdminPanel() {
   // Premier chargement
   useEffect(() => {
     if (loadedRef.current) return;
-    if (user?.role !== "admin") { navigate("home"); return; }
+    if (user?.role !== "admin") { navigate("/"); return; }
     loadedRef.current = true;
     loadAdminData();
   }, []);
@@ -196,7 +196,7 @@ export default function AdminPanel() {
                     )}
                     <button
                       className="btn-view-admin"
-                      onClick={() => navigate("annonce-detail", a._id)}
+                      onClick={() => navigate(`/annonce/${a._id}`)}
                     >
                       Détails
                     </button>

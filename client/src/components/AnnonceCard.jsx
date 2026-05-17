@@ -29,7 +29,7 @@ export default function AnnonceCard({ annonce, onFavori, isFavori }) {
   return (
     <div 
       className="modern-card" 
-      onClick={() => navigate("annonce-detail", annonce._id)}
+      onClick={() => navigate(`/annonce/${annonce._id}`)}
     >
       <div className="card-image-wrapper">
         {annonce.photos?.[0]?.url ? (

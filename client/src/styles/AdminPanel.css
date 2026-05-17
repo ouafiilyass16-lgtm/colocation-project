@@ -8,8 +8,8 @@
 }
 
 .badge-count {
-    background: #0f172a;
-    color: #d4b996;
+    background: var(--text);
+    color: var(--accent);
     padding: 2px 10px;
     border-radius: 50px;
     font-weight: 800;
@@ -23,12 +23,12 @@
 }
 
 .admin-card {
-    background: white;
+    background: var(--surface);
     border-radius: 24px;
     overflow: hidden;
     display: flex;
-    border: 1px solid rgba(15, 23, 42, 0.05);
-    box-shadow: 6px 6px 0px rgba(15, 23, 42, 0.02);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sketch-sm);
 }
 
 .admin-card-img {
@@ -51,18 +51,19 @@
     font-family: 'Fraunces', serif;
     font-size: 20px;
     margin-bottom: 10px;
+    color: var(--text);
 }
 
 .owner-info {
     font-size: 13px;
-    color: #64748b;
+    color: var(--text3);
     font-weight: 700;
     margin-bottom: 5px;
 }
 
 .specs-row-mini {
     font-size: 14px;
-    color: #94a3b8;
+    color: var(--text4);
 }
 
 .admin-card-actions {
@@ -71,7 +72,7 @@
 }
 
 .btn-valider {
-    background: #10B981;
+    background: var(--success);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -82,9 +83,9 @@
 }
 
 .btn-rejeter {
-    background: #FEF2F2;
-    color: #EF4444;
-    border: 1px solid #FEE2E2;
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger-border);
     padding: 10px 20px;
     border-radius: 12px;
     font-weight: 700;
@@ -92,8 +93,8 @@
 }
 
 .btn-voir {
-    background: #F1F5F9;
-    color: #0F172A;
+    background: var(--bg2);
+    color: var(--text);
     border: none;
     padding: 10px 20px;
     border-radius: 12px;
@@ -102,6 +103,7 @@
 }
 
 .btn-valider:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2); }
+
 .admin-stats-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -110,19 +112,19 @@
 }
 
 .stat-box-mini {
-    background: white;
+    background: var(--surface);
     padding: 20px;
     border-radius: 16px;
     display: flex;
     align-items: center;
     gap: 15px;
-    box-shadow: 4px 4px 0px rgba(15, 23, 42, 0.02);
-    border: 1px solid rgba(15, 23, 42, 0.05);
+    box-shadow: var(--shadow-sketch-sm);
+    border: 1px solid var(--border-light);
 }
 
 .stat-box-mini.gold {
-    background: #0F172A;
-    color: #D4B996;
+    background: var(--text);
+    color: var(--accent);
 }
 
 .stat-icon { font-size: 24px; }
@@ -133,7 +135,7 @@
     display: flex;
     gap: 10px;
     margin-bottom: 30px;
-    background: #F1F5F9;
+    background: var(--bg2);
     padding: 5px;
     border-radius: 12px;
 }
@@ -147,40 +149,40 @@
     cursor: pointer;
     border-radius: 8px;
     transition: 0.3s;
-    color: #64748B;
+    color: var(--text3);
 }
 
 .admin-tab.active {
-    background: white;
-    color: #0F172A;
+    background: var(--surface);
+    color: var(--text);
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
 .admin-card-row {
-    background: white;
+    background: var(--surface);
     border-radius: 20px;
     display: flex;
     gap: 20px;
     padding: 15px;
     margin-bottom: 15px;
-    border: 1px solid rgba(15, 23, 42, 0.05);
+    border: 1px solid var(--border-light);
 }
 
 .admin-card-img-wrap { width: 150px; height: 110px; border-radius: 12px; overflow: hidden; }
 .admin-card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
 
 .admin-card-body { flex: 1; display: flex; justify-content: space-between; align-items: center; }
-.admin-card-main h3 { font-size: 17px; margin-bottom: 5px; font-family: 'Fraunces', serif; }
+.admin-card-main h3 { font-size: 17px; margin-bottom: 5px; font-family: 'Fraunces', serif; color: var(--text); }
 
 .admin-reason {
     margin-top: 10px;
     font-size: 12px;
-    color: #EF4444;
-    background: #FEF2F2;
+    color: var(--danger);
+    background: var(--danger-bg);
     padding: 5px 10px;
     border-radius: 6px;
 }
 
-.btn-approve { background: #10B981; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-.btn-reject { background: #FEF2F2; color: #EF4444; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-.btn-view-admin { background: #F1F5F9; color: #64748B; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.btn-approve { background: var(--success); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.btn-reject { background: var(--danger-bg); color: var(--danger); border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.btn-view-admin { background: var(--bg2); color: var(--text3); border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }

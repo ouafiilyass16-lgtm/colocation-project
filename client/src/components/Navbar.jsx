@@ -1,3 +1,4 @@
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../App";
 import { useState, useEffect, useRef } from "react";
 import ThemeToggle from "./ThemeToggle";
@@ -5,7 +6,9 @@ import mainLogo from "../styles/ChatGPT Image 14 mai 2026, 19_19_52.png";
 import "../styles/Navbar.css";
 
 export default function Navbar() {
-  const { user, logout, navigate, page } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -26,23 +29,23 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { label: "Annonces", page: "home" },
+    { label: "Annonces", path: "/" },
     ...(user ? [
-      { label: "Messages", page: "messages" },
-      ...(user.role === "admin" ? [{ label: "Panel Admin", page: "admin" }] : []),
-      user.role === "proprietaire" && { label: "Mes annonces", page: "mes-annonces" },
-      user.role === "etudiant" && { label: "Favoris", page: "favoris" },
+      { label: "Messages", path: "/messages" },
+      ...(user.role === "admin" ? [{ label: "Panel Admin", path: "/admin" }] : []),
+      user.role === "proprietaire" && { label: "Mes annonces", path: "/mes-annonces" },
+      user.role === "etudiant" && { label: "Favoris", path: "/favoris" },
     ].filter(Boolean) : [])
   ];
 
-  const isActive = (p) => page === p;
+  const isActive = (path) => location.pathname === path;
 
   return (
     <>
       <nav className={`navbar-container ${scrolled ? "scrolled" : ""}`}>
         <div className="navbar-content">
           
-          <button className="nav-logo" onClick={() => navigate("home")}>
+          <button className="nav-logo" onClick={() => navigate("/")}>
             <img src={mainLogo} alt="LocaStudy Logo" className="nav-logo-img" />
             <span className="nav-logo-text">
               Loca<span className="logo-udy-accent">Study</span>
@@ -53,12 +56,12 @@ export default function Navbar() {
           <div className="nav-links-desktop">
             {navLinks.map((link) => (
               <button
-                key={link.page}
-                onClick={() => navigate(link.page)}
-                className={`nav-link-item ${isActive(link.page) ? "active" : ""}`}
+                key={link.path}
+                onClick={() => navigate(link.path)}
+                className={`nav-link-item ${isActive(link.path) ? "active" : ""}`}
               >
                 {link.label}
-                {isActive(link.page) && <span className="nav-link-dot" />}
+                {isActive(link.path) && <span className="nav-link-dot" />}
               </button>
             ))}
           </div>
@@ -66,7 +69,7 @@ export default function Navbar() {
           {/* ── ACTIONS DROITE ── */}
           <div className="nav-actions">
             {user?.role === "proprietaire" && (
-              <button className="btn-publish" onClick={() => navigate("create-annonce")}>
+              <button className="btn-publish" onClick={() => navigate("/create-annonce")}>
                 + Publier
               </button>
             )}
@@ -105,7 +108,7 @@ export default function Navbar() {
                             </svg>
                           }
                           label="Gestion Admin" 
-                          onClick={() => {navigate("admin"); setDropOpen(false);}} 
+                          onClick={() => {navigate("/admin"); setDropOpen(false);}} 
                         />
                       )}
                       <DropItem 
@@ -116,7 +119,7 @@ export default function Navbar() {
                           </svg>
                         }
                         label="Mon profil" 
-                        onClick={() => {navigate("profile"); setDropOpen(false);}} 
+                        onClick={() => {navigate("/profile"); setDropOpen(false);}} 
                       />
                       <DropItem 
                         icon={
@@ -125,7 +128,7 @@ export default function Navbar() {
                           </svg>
                         }
                         label="Messages" 
-                        onClick={() => {navigate("messages"); setDropOpen(false);}} 
+                        onClick={() => {navigate("/messages"); setDropOpen(false);}} 
                       />
                       <div style={{ height: "1px", background: "rgba(15, 23, 42, 0.05)", margin: "8px 0" }}></div>
                       <DropItem 
@@ -144,8 +147,8 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="auth-nav-group">
-                <button className="nav-link-item" onClick={() => navigate("login")}>Connexion</button>
-                <button className="btn-auth-nav" onClick={() => navigate("register")}>S'inscrire</button>
+                <button className="nav-link-item" onClick={() => navigate("/login")}>Connexion</button>
+                <button className="btn-auth-nav" onClick={() => navigate("/register")}>S'inscrire</button>
               </div>
             )}
           </div>

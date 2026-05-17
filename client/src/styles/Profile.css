@@ -1,17 +1,16 @@
 .profile-wrapper-prestige {
     padding: 60px 0;
-    background: #fafaf9;
+    background: var(--bg);
     min-height: 90vh;
 }
 
-/* Hero Card */
 .profile-hero-card {
-    background: white;
+    background: var(--surface);
     border-radius: 30px;
     padding: 40px;
     margin-bottom: 30px;
-    border: 1px solid rgba(15, 23, 42, 0.05);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
 }
 
 .profile-hero-content {
@@ -23,8 +22,8 @@
 .avatar-huge {
     width: 120px;
     height: 120px;
-    background: #0f172a;
-    color: #d4b996;
+    background: var(--text);
+    color: var(--accent);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -38,7 +37,7 @@
     position: absolute;
     bottom: 5px;
     right: 5px;
-    background: white;
+    background: var(--surface);
     width: 35px;
     height: 35px;
     border-radius: 50%;
@@ -46,7 +45,7 @@
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-md);
 }
 
 .role-badge-prestige {
@@ -58,12 +57,11 @@
     margin-top: 10px;
 }
 
-/* Sections */
 .profile-section-card {
-    background: white;
+    background: var(--surface);
     border-radius: 24px;
     padding: 30px;
-    border: 1px solid rgba(15, 23, 42, 0.05);
+    border: 1px solid var(--border-light);
     margin-bottom: 25px;
 }
 
@@ -75,19 +73,18 @@
 }
 
 .btn-edit-prestige {
-    background: #f1f5f9;
+    background: var(--bg2);
     border: none;
     padding: 10px 20px;
     border-radius: 12px;
     font-weight: 600;
-    color: #0f172a;
+    color: var(--text);
     cursor: pointer;
     transition: 0.3s;
 }
 
-.btn-edit-prestige:hover { background: #e2e8f0; }
+.btn-edit-prestige:hover { background: var(--bg3); }
 
-/* Form & Display */
 .info-display-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -97,7 +94,7 @@
 .info-item-prestige label {
     display: block;
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--text4);
     text-transform: uppercase;
     font-weight: 800;
     margin-bottom: 8px;
@@ -105,11 +102,11 @@
 
 .info-value {
     font-size: 16px;
-    color: #0f172a;
+    color: var(--text);
     font-weight: 600;
 }
 
-.info-value.is-empty { color: #cbd5e1; font-style: italic; }
+.info-value.is-empty { color: var(--border2); font-style: italic; }
 
 .form-grid-2 {
     display: grid;
@@ -122,14 +119,16 @@
     font-size: 13px;
     font-weight: 700;
     margin-bottom: 8px;
+    color: var(--text);
 }
 
 .form-group-prestige input {
     width: 100%;
     padding: 14px;
     border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    background: #f8fafc;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
 }
 
 .form-actions-prestige {
@@ -139,8 +138,8 @@
 }
 
 .btn-save-prestige {
-    background: #0f172a;
-    color: #d4b996;
+    background: var(--text);
+    color: var(--accent);
     padding: 14px 28px;
     border-radius: 12px;
     border: none;
@@ -149,21 +148,21 @@
 }
 
 .btn-cancel-prestige {
-    background: white;
-    border: 1px solid #e2e8f0;
+    background: var(--surface);
+    border: 1px solid var(--border);
     padding: 14px 28px;
     border-radius: 12px;
     font-weight: 600;
     cursor: pointer;
+    color: var(--text);
 }
 
-/* Admin Card */
-.admin-special { background: #0f172a; color: white; }
-.section-title-prestige.white { color: #d4b996; margin-bottom: 10px; }
+.admin-special { background: var(--text); color: var(--bg); }
+.section-title-prestige.white { color: var(--accent); margin-bottom: 10px; }
 .admin-cta-flex { display: flex; justify-content: space-between; align-items: center; }
 .btn-admin-go {
-    background: #d4b996;
-    color: #0f172a;
+    background: var(--accent);
+    color: var(--text);
     border: none;
     padding: 15px 30px;
     border-radius: 12px;
@@ -172,8 +171,8 @@
 }
 
 .alert-prestige.success {
-    background: #ecfdf5;
-    color: #065f46;
+    background: var(--success-bg);
+    color: var(--success);
     padding: 15px;
     border-radius: 12px;
     margin-bottom: 20px;

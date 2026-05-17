@@ -89,7 +89,7 @@ export default function Login() {
         <div className="auth-footer">
           <p className="auth-footer-text">
             Nouveau ici ? 
-            <span className="auth-link-action" onClick={() => navigate("register")}>
+            <span className="auth-link-action" onClick={() => navigate("/register")}>
               Créer un compte gratuitement
             </span>
           </p>
@@ -112,7 +112,7 @@ export function Register() {
     try {
       const data = await api.post("/auth/register", form);
       setLoading(false);
-      if (data.msg === "Utilisateur enregistré avec succès") navigate("login");
+      if (data.msg === "Utilisateur enregistré avec succès") navigate("/login");
       else setError(data.msg);
     } catch (err) {
       setLoading(false);
@@ -156,12 +156,6 @@ export function Register() {
               className={`role-card ${form.role === "etudiant" ? "active" : ""}`}
               onClick={() => setForm(p => ({ ...p, role: "etudiant" }))}
             >
-              <span className="role-card-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                  <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
-                </svg>
-              </span>
               <span className="role-card-label">Étudiant</span>
               <span className="role-card-desc">Chercher</span>
             </div>
@@ -170,12 +164,6 @@ export function Register() {
               className={`role-card ${form.role === "proprietaire" ? "active" : ""}`}
               onClick={() => setForm(p => ({ ...p, role: "proprietaire" }))}
             >
-              <span className="role-card-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                  <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
-                </svg>
-              </span>
 
               <span className="role-card-label">Propriétaire</span>
               <span className="role-card-desc">Louer</span>
@@ -190,7 +178,7 @@ export function Register() {
         <div className="auth-footer">
           <p className="auth-footer-text">
             Déjà membre ? 
-            <span className="auth-link-action" onClick={() => navigate("login")}>
+            <span className="auth-link-action" onClick={() => navigate("/login")}>
               Se connecter
             </span>
           </p>

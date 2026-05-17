@@ -64,7 +64,7 @@ export default function MesAnnonces() {
             <h1 className="detail-main-title">Tableau de Bord</h1>
             <p className="subtitle-prestige">{annonces.length} annonce{annonces.length > 1 ? "s" : ""} publiée{annonces.length > 1 ? "s" : ""}</p>
           </div>
-          <button className="btn-send-premium" onClick={() => navigate("create-annonce")}>
+          <button className="btn-send-premium" onClick={() => navigate("/create-annonce")}>
             + Nouvelle annonce
           </button>
         </div>
@@ -113,7 +113,7 @@ export default function MesAnnonces() {
             </div>
             <h3>Aucune annonce trouvée</h3>
             <p>Commencez par publier votre premier bien pour attirer des étudiants.</p>
-            <button className="btn-send-premium" onClick={() => navigate("create-annonce")}>
+            <button className="btn-send-premium" onClick={() => navigate("/create-annonce")}>
               Créer une annonce
             </button>
           </div>
@@ -178,7 +178,7 @@ export default function MesAnnonces() {
 
                 {/* Actions Right */}
                 <div className="card-actions">
-                  <button className="btn-action-view" onClick={() => navigate("annonce-detail", a._id)}>Voir</button>
+                  <button className="btn-action-view" onClick={() => navigate(`/annonce/${a._id}`)}>Voir</button>
                   {a.statut !== "archivee" && (
                     <button className="btn-action-archive" onClick={() => setConfirm({ type: "archive", id: a._id, titre: a.titre })}>Archiver</button>
                   )}

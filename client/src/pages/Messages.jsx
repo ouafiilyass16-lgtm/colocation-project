@@ -200,7 +200,7 @@ export default function Messages() {
 
           <div className="conv-list">
             {conversations.length === 0 ? (
-              <div style={{ padding: 20, color: "#94a3b8", fontSize: 13 }}>
+              <div style={{ padding: 20, color: "var(--text4)", fontSize: 13 }}>
                 Aucune conversation
               </div>
             ) : conversations.map(conv => (

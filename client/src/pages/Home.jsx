@@ -81,7 +81,7 @@ export default function Home() {
 const handleFavori = async (annonceId) => {
   // Vérifier si l'utilisateur est connecté
   if (!token) {
-    navigate("login");
+    navigate("/login");
     return;
   }
   
