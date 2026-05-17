@@ -33,7 +33,6 @@ exports.getAnnonces = async (req, res) => {
 };
 
 // ─── ADMIN : Toutes les annonces, filtrables par ?statut= ────────────────────
-// FIX : fonction déclarée UNE SEULE FOIS (elle était en double avant)
 exports.getAnnoncesToutesAdmin = async (req, res) => {
   try {
     const { statut } = req.query;

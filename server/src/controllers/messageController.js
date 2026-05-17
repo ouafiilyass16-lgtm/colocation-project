@@ -47,7 +47,28 @@ exports.envoyerMessage = async (req, res) => {
       console.warn("Socket non dispo :", socketErr.message);
     }
 
-    res.status(201).json({ message: 'Message envoyé avec succès', data: messagePopule });
+    // 🛠️ ── NOUVEAU : LOGIQUE DE DISTINCTION PREMIER CONTACT / DISCUSSION ──
+    let messageDeRetour = 'Message envoyé avec succès';
+    
+    if (annonceId) {
+      // On compte combien de messages existent entre ces deux utilisateurs pour CE logement précis
+      const messageCount = await Message.countDocuments({
+        annonce: annonceId,
+        $or: [
+          { expediteur: req.user.id, destinataire: destinataireId },
+          { expediteur: destinataireId, destinataire: req.user.id }
+        ]
+      });
+
+      // Si le compteur vaut 1, ça veut dire que l'unique message en BDD est celui qu'on vient de sauvegarder à l'instant
+      if (messageCount === 1) {
+        messageDeRetour = 'Demande envoyée avec succès';
+      }
+    }
+
+    // On renvoie le bon texte dynamique selon le contexte
+    res.status(201).json({ message: messageDeRetour, data: messagePopule });
+
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
   }
@@ -121,7 +142,7 @@ exports.getMessagesAnnonce = async (req, res) => {
     const { annonceId } = req.params;
 
     const messages = await Message.find({
-      annonce: annonceId,
+      count: annonceId,
       $or: [
         { expediteur:  req.user.id },
         { destinataire: req.user.id },
