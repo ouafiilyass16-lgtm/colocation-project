@@ -145,7 +145,10 @@ export default function AdminPanel() {
                 <div className="admin-card-body">
                   <div className="admin-card-main">
                     <h3>{a.titre}</h3>
-                    <p className="owner-text">
+                    <p className="owner-text" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      {a.proprietaire?.photoUrl && (
+                        <img src={a.proprietaire.photoUrl} alt="" className="admin-owner-photo" />
+                      )}
                       Propriétaire : <strong>{a.proprietaire?.nom}</strong>
                     </p>
                     <div className="admin-specs">

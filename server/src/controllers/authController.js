@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
         if (!isMatch) return res.status(400).json({ msg: "Identifiants invalides" });
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-        res.json({ token, user: { id: user.id, nom: user.nom, role: user.role } });
+        res.json({ token, user: { id: user.id, nom: user.nom, email: user.email, role: user.role, photoUrl: user.photoUrl || "" } });
     } catch (err) {
         res.status(500).send("Erreur serveur");
     }

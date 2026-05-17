@@ -28,8 +28,8 @@ exports.envoyerMessage = async (req, res) => {
     await message.save();
 
     const messagePopule = await Message.findById(message._id)
-      .populate('expediteur',  'nom email')
-      .populate('destinataire','nom email')
+      .populate('expediteur',  'nom email photoUrl')
+      .populate('destinataire','nom email photoUrl')
       .populate('annonce',     'titre ville prix');
 
     // ── Émettre le message en temps réel au destinataire ──────
@@ -78,7 +78,7 @@ exports.envoyerMessage = async (req, res) => {
 exports.getMessagesRecus = async (req, res) => {
   try {
     const messages = await Message.find({ destinataire: req.user.id })
-      .populate('expediteur', 'nom email')
+      .populate('expediteur', 'nom email photoUrl')
       .populate('annonce',    'titre ville prix')
       .sort({ createdAt: -1 });
 
@@ -96,7 +96,7 @@ exports.getMessagesRecus = async (req, res) => {
 exports.getMessagesEnvoyes = async (req, res) => {
   try {
     const messages = await Message.find({ expediteur: req.user.id })
-      .populate('destinataire', 'nom email')
+      .populate('destinataire', 'nom email photoUrl')
       .populate('annonce',      'titre ville prix')
       .sort({ createdAt: -1 });
 
@@ -117,8 +117,8 @@ exports.getConversation = async (req, res) => {
         { expediteur: userId,      destinataire: req.user.id },
       ],
     })
-      .populate('expediteur',  'nom email')
-      .populate('destinataire','nom email')
+      .populate('expediteur',  'nom email photoUrl')
+      .populate('destinataire','nom email photoUrl')
       .populate('annonce',     'titre ville prix')
       .sort({ createdAt: 1 });
 
@@ -148,8 +148,8 @@ exports.getMessagesAnnonce = async (req, res) => {
         { destinataire: req.user.id },
       ],
     })
-      .populate('expediteur',  'nom email')
-      .populate('destinataire','nom email')
+      .populate('expediteur',  'nom email photoUrl')
+      .populate('destinataire','nom email photoUrl')
       .populate('annonce',     'titre ville prix')
       .sort({ createdAt: 1 });
 

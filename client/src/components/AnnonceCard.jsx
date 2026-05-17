@@ -64,7 +64,10 @@ export default function AnnonceCard({ annonce, onFavori, isFavori }) {
       </div>
 
       <div className="card-content">
-        <div className="card-meta">
+        <div className="card-meta" style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+          {annonce.proprietaire?.photoUrl && (
+            <img src={annonce.proprietaire.photoUrl} alt="" className="card-owner-photo" />
+          )}
           {icons.ville} <span>{annonce.ville}</span>
         </div>
         <h3 className="card-title">{annonce.titre}</h3>

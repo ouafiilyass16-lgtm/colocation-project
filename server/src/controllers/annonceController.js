@@ -23,7 +23,7 @@ exports.creerAnnonce = async (req, res) => {
 exports.getAnnonces = async (req, res) => {
   try {
     const annonces = await Annonce.find({ statut: 'active' })
-      .populate('proprietaire', 'nom email')
+      .populate('proprietaire', 'nom email photoUrl')
       .sort({ createdAt: -1 });
 
     res.status(200).json(annonces);
@@ -42,7 +42,7 @@ exports.getAnnoncesToutesAdmin = async (req, res) => {
     const filtre = statut ? { statut } : {};
 
     const annonces = await Annonce.find(filtre)
-      .populate('proprietaire', 'nom email')
+      .populate('proprietaire', 'nom email photoUrl')
       .sort({ createdAt: -1 });
 
     res.status(200).json(annonces);
@@ -59,7 +59,7 @@ exports.getAnnonceById = async (req, res) => {
       return res.status(400).json({ message: "ID d'annonce invalide" });
     }
 
-    const annonce = await Annonce.findById(id).populate('proprietaire', 'nom email');
+    const annonce = await Annonce.findById(id).populate('proprietaire', 'nom email photoUrl');
     if (!annonce) return res.status(404).json({ message: 'Annonce non trouvée' });
 
     res.status(200).json(annonce);
@@ -104,7 +104,7 @@ exports.modifierAnnonce = async (req, res) => {
 exports.getAnnoncesEnAttente = async (req, res) => {
   try {
     const annonces = await Annonce.find({ statut: 'en_attente' })
-      .populate('proprietaire', 'nom email')
+      .populate('proprietaire', 'nom email photoUrl')
       .sort({ createdAt: -1 });
 
     res.status(200).json(annonces);
@@ -291,7 +291,7 @@ exports.rechercherAnnonces = async (req, res) => {
     }
 
     const annonces = await Annonce.find(filtre)
-      .populate('proprietaire', 'nom email')
+      .populate('proprietaire', 'nom email photoUrl')
       .sort({ createdAt: -1 });
 
     if (annonces.length === 0) {

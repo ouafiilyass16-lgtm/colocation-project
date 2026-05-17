@@ -210,7 +210,11 @@ export default function Messages() {
                 onClick={() => setSelectedConv(conv)}
               >
                 <div className="avatar-small" style={{ position: "relative" }}>
-                  {conv.interlocuteur?.nom?.[0]?.toUpperCase() || "?"}
+                  {conv.interlocuteur?.photoUrl ? (
+                    <img src={conv.interlocuteur.photoUrl} alt="" className="avatar-small-img" />
+                  ) : (
+                    conv.interlocuteur?.nom?.[0]?.toUpperCase() || "?"
+                  )}
                   {conv.unread > 0 && (
                     <span style={{
                       position: "absolute", top: -3, right: -3,
@@ -243,7 +247,12 @@ export default function Messages() {
           ) : (
             <>
               <header className="chat-header">
-                <div className="header-info">
+                <div className="header-info" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  {selectedConv.interlocuteur?.photoUrl ? (
+                    <img src={selectedConv.interlocuteur.photoUrl} alt="" className="chat-header-photo" />
+                  ) : (
+                    <div className="chat-header-initial">{selectedConv.interlocuteur?.nom?.[0]?.toUpperCase() || "?"}</div>
+                  )}
                   <span className="user-name">{selectedConv.interlocuteur?.nom}</span>
                   {selectedConv.annonce && (
                     <span className="annonce-ref">
@@ -257,22 +266,34 @@ export default function Messages() {
               <div className="chat-messages" ref={messagesContainerRef}>
                 {selectedConv.messages.map((m, i) => {
                   const mine = isMyMessage(m);
+                  const sender = m.expediteur;
                   return (
                     <div
                       key={m._id || i}
-                      className={`message-bubble ${mine ? "sent" : "received"}`}
+                      className={`message-row ${mine ? "sent" : "received"}`}
                     >
-                      <p>{m.contenu}</p>
-                      <div className="msg-status-row">
-                        <span className="msg-time">{formatTime(m.createdAt)}</span>
-                        {mine && (
-                          <span
-                            className={`read-status ${m.lu ? "is-read" : ""}`}
-                            title={m.lu ? "Vu" : "Envoyé"}
-                          >
-                            {m.lu ? "✓✓" : "✓"}
-                          </span>
-                        )}
+                      {!mine && (
+                        <div className="msg-avatar">
+                          {sender?.photoUrl ? (
+                            <img src={sender.photoUrl} alt="" className="msg-avatar-img" />
+                          ) : (
+                            <div className="msg-avatar-initial">{sender?.nom?.[0]?.toUpperCase() || "?"}</div>
+                          )}
+                        </div>
+                      )}
+                      <div className="message-bubble">
+                        <p>{m.contenu}</p>
+                        <div className="msg-status-row">
+                          <span className="msg-time">{formatTime(m.createdAt)}</span>
+                          {mine && (
+                            <span
+                              className={`read-status ${m.lu ? "is-read" : ""}`}
+                              title={m.lu ? "Vu" : "Envoyé"}
+                            >
+                              {m.lu ? "✓✓" : "✓"}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   );

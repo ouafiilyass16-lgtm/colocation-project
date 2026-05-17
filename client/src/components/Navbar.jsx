@@ -13,7 +13,17 @@ export default function Navbar() {
   const [dropOpen, setDropOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [annonceCount, setAnnonceCount] = useState(null);
+  const [photoUrl, setPhotoUrl] = useState(user?.photoUrl || "");
   const dropRef = useRef(null);
+
+  useEffect(() => {
+    setPhotoUrl(user?.photoUrl || "");
+    if (token) {
+      api.get("/profile", token).then(data => {
+        if (data?.photoUrl) setPhotoUrl(data.photoUrl);
+      }).catch(() => {});
+    }
+  }, [user, token]);
 
   useEffect(() => {
     if (user?.role === "proprietaire" && token) {
@@ -51,6 +61,8 @@ export default function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
+  const closeMobile = () => setMobileOpen(false);
+
   return (
     <>
       <nav className={`navbar-container ${scrolled ? "scrolled" : ""}`}>
@@ -87,6 +99,12 @@ export default function Navbar() {
 
             <ThemeToggle />
 
+            <button className="nav-hamburger" onClick={() => setMobileOpen(true)} aria-label="Menu">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+
             {user ? (
               <div ref={dropRef} style={{ position: "relative" }}>
                 {/* LE BOUTON DÉCLENCHEUR */}
@@ -95,7 +113,11 @@ export default function Navbar() {
                     <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
                   </svg>
                   <div className="avatar-circle">
-                    {user.nom?.[0]?.toUpperCase()}
+                    {photoUrl ? (
+                      <img src={photoUrl} alt="" className="avatar-circle-img" />
+                    ) : (
+                      user.nom?.[0]?.toUpperCase()
+                    )}
                   </div>
                 </button>
 
@@ -103,6 +125,7 @@ export default function Navbar() {
                 {dropOpen && (
                   <div className="dropdown-menu-custom">
                     <div className="dropdown-header">
+                      {photoUrl && <img src={photoUrl} alt="" className="dropdown-photo" />}
                       <strong>{user.nom}</strong>
                       <span className="user-role-badge">
                         {user.role === "admin" ? "Administrateur" : 
@@ -165,6 +188,67 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+
+      {/* ── OVERLAY MOBILE ── */}
+      {mobileOpen && <div className="mobile-overlay" onClick={closeMobile} />}
+
+      {/* ── MENU MOBILE ── */}
+      <div className={`mobile-menu ${mobileOpen ? "open" : ""}`}>
+        <div className="mobile-menu-header">
+          <span className="mobile-menu-title">Menu</span>
+          <button className="mobile-menu-close" onClick={closeMobile} aria-label="Fermer">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div className="mobile-menu-links">
+          {navLinks.map((link) => (
+            <button
+              key={link.path}
+              onClick={() => { navigate(link.path); closeMobile(); }}
+              className={`mobile-link-item ${isActive(link.path) ? "active" : ""}`}
+            >
+              {link.label}
+            </button>
+          ))}
+        </div>
+        {user ? (
+          <div className="mobile-menu-auth">
+            <div className="mobile-menu-user">
+              <div className="avatar-circle" style={{ width: 36, height: 36, fontSize: 15 }}>
+                {photoUrl ? (
+                  <img src={photoUrl} alt="" className="avatar-circle-img" />
+                ) : (
+                  user.nom?.[0]?.toUpperCase()
+                )}
+              </div>
+              <div>
+                <strong style={{ fontSize: 14, color: "var(--text)" }}>{user.nom}</strong>
+                <span className="user-role-badge" style={{ fontSize: 10 }}>
+                  {user.role === "admin" ? "Administrateur" : 
+                   user.role === "etudiant" ? "Étudiant" : "Propriétaire"}
+                </span>
+              </div>
+            </div>
+            <button className="mobile-link-item" onClick={() => { navigate("/profile"); closeMobile(); }}>
+              Mon profil
+            </button>
+            <button className="mobile-link-item mobile-link-logout" onClick={() => { logout(); closeMobile(); }}>
+              Déconnexion
+            </button>
+          </div>
+        ) : (
+          <div className="mobile-menu-auth">
+            <button className="mobile-link-item" onClick={() => { navigate("/login"); closeMobile(); }}>
+              Connexion
+            </button>
+            <button className="mobile-link-item mobile-link-register" onClick={() => { navigate("/register"); closeMobile(); }}>
+              S'inscrire
+            </button>
+          </div>
+        )}
+      </div>
     </>
   );
 }

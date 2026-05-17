@@ -162,3 +162,11 @@
   transform: translateX(5px);
   box-shadow: var(--shadow-md);
 }
+
+.card-owner-photo {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}

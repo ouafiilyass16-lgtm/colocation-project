@@ -105,7 +105,7 @@ export default function App() {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, navigate, api }}>
+    <AuthContext.Provider value={{ user, token, login, logout, setUser, navigate, api }}>
       <div style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", flexDirection: "column" }}>
         <Navbar />
         <div style={{ flex: 1 }}>

@@ -186,3 +186,10 @@
 .btn-approve { background: var(--success); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
 .btn-reject { background: var(--danger-bg); color: var(--danger); border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
 .btn-view-admin { background: var(--bg2); color: var(--text3); border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+.admin-owner-photo {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}

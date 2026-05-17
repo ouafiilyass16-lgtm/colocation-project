@@ -146,7 +146,11 @@ export default function AnnonceDetail() {
                   </div>
                 </div>
                 <div className="host-avatar">
-                  {annonce.proprietaire?.nom?.[0]?.toUpperCase()}
+                  {annonce.proprietaire?.photoUrl ? (
+                    <img src={annonce.proprietaire.photoUrl} alt="" className="host-avatar-img" />
+                  ) : (
+                    annonce.proprietaire?.nom?.[0]?.toUpperCase()
+                  )}
                 </div>
               </div>
             </div>
@@ -179,8 +183,12 @@ export default function AnnonceDetail() {
             <div className="owner-info-card">
               <h3 className="section-subtitle" style={{ fontSize: 18, marginBottom: 16 }}>Informations de contact</h3>
               <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--bg2)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 600, color: "var(--text)" }}>
-                  {annonce.proprietaire?.nom?.[0]?.toUpperCase()}
+                <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--bg2)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 600, color: "var(--text)", overflow: "hidden" }}>
+                  {annonce.proprietaire?.photoUrl ? (
+                    <img src={annonce.proprietaire.photoUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    annonce.proprietaire?.nom?.[0]?.toUpperCase()
+                  )}
                 </div>
                 <div>
                   <div style={{ fontWeight: 600, fontSize: 15, color: "var(--text)" }}>{annonce.proprietaire?.nom}</div>

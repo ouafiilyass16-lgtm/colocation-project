@@ -95,7 +95,7 @@ const roleConfig = {
 };
 
 export default function Profile() {
-  const { api, token, user, navigate } = useAuth();
+  const { api, token, user, navigate, setUser } = useAuth();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({});
@@ -112,20 +112,44 @@ export default function Profile() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith("image/")) return;
+    if (file.size > 5 * 1024 * 1024) { alert("L'image ne doit pas dépasser 5 Mo"); return; }
 
+    setPhotoUploading(true);
     const reader = new FileReader();
     reader.onload = async (ev) => {
-      setPhotoUploading(true);
       try {
-        await api.put("/profile/photo", { photoUrl: ev.target.result }, token);
-        loadProfile();
+        const res = await api.put("/profile/photo", { photoUrl: ev.target.result }, token);
+        if (res.photoUrl) {
+          await loadProfile();
+          const updated = { ...user, photoUrl: res.photoUrl };
+          setUser(updated);
+          localStorage.setItem("user", JSON.stringify(updated));
+        }
       } catch (err) {
-        console.error("Erreur upload photo");
+        console.error("Erreur upload photo", err);
       }
       setPhotoUploading(false);
     };
+    reader.onerror = () => { setPhotoUploading(false); alert("Erreur lors de la lecture du fichier"); };
     reader.readAsDataURL(file);
     e.target.value = "";
+  };
+
+  const handlePhotoDelete = async () => {
+    if (!confirm("Supprimer votre photo de profil ?")) return;
+    setPhotoUploading(true);
+    try {
+      const res = await api.delete("/profile/photo", token);
+      if (res.photoUrl === "") {
+        await loadProfile();
+        const updated = { ...user, photoUrl: "" };
+        setUser(updated);
+        localStorage.setItem("user", JSON.stringify(updated));
+      }
+    } catch (err) {
+      console.error("Erreur suppression photo", err);
+    }
+    setPhotoUploading(false);
   };
 
   useEffect(() => { if (token) loadProfile(); }, [token]);
@@ -227,6 +251,14 @@ export default function Profile() {
                       </svg>
                     )}
                   </div>
+                  {profile?.photoUrl && (
+                    <div className="avatar-delete-btn" onClick={(e) => { e.stopPropagation(); handlePhotoDelete(); }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      </svg>
+                    </div>
+                  )}
                   <input type="file" ref={fileInputRef} accept="image/*" style={{ display: "none" }} onChange={handlePhotoChange} />
                 </div>
                 <div className="profile-hero-text">

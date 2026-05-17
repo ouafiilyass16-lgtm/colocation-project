@@ -32,6 +32,16 @@ exports.getProfile = async (req, res) => {
   }
 };
 
+// ─── Supprimer la photo de profil ─────────────────────────
+exports.deletePhoto = async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.user.id, { photoUrl: "" });
+    res.json({ photoUrl: "" });
+  } catch (err) {
+    res.status(500).json({ msg: "Erreur serveur" });
+  }
+};
+
 exports.updateEtudiantProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
