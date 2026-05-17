@@ -56,7 +56,7 @@ export default function MesAnnonces() {
 
   return (
     <div className="mes-annonces-wrapper">
-      <div className="container">
+      <div className="container" style={{ paddingTop: 90 }}>
 
         {/* Header Prestige */}
         <div className="page-header-prestige">
@@ -179,6 +179,7 @@ export default function MesAnnonces() {
                 {/* Actions Right */}
                 <div className="card-actions">
                   <button className="btn-action-view" onClick={() => navigate(`/annonce/${a._id}`)}>Voir</button>
+                  <button className="btn-action-edit" onClick={() => navigate(`/modifier-annonce/${a._id}`)}>Modifier</button>
                   {a.statut !== "archivee" && (
                     <button className="btn-action-archive" onClick={() => setConfirm({ type: "archive", id: a._id, titre: a.titre })}>Archiver</button>
                   )}

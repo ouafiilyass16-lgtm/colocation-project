@@ -166,6 +166,22 @@
     color: var(--text);
 }
 
+.btn-action-edit {
+    background: transparent;
+    border: 1px solid var(--accent);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--accent);
+    transition: all 0.2s ease;
+}
+
+.btn-action-edit:hover {
+    background: var(--accent);
+    color: var(--text);
+}
+
 .btn-action-archive {
     background: var(--surface);
     border: 1px solid var(--border);
