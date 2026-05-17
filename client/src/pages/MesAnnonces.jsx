@@ -64,11 +64,9 @@ export default function MesAnnonces() {
             <h1 className="detail-main-title">Tableau de Bord</h1>
             <p className="subtitle-prestige">{annonces.length} annonce{annonces.length > 1 ? "s" : ""} publiée{annonces.length > 1 ? "s" : ""}</p>
           </div>
-          {annonces.length === 0 && (
-            <button className="btn-send-premium" onClick={() => navigate("/create-annonce")}>
-              + Nouvelle annonce
-            </button>
-          )}
+          <button className="btn-send-premium" onClick={() => navigate("/create-annonce")}>
+            + Nouvelle annonce
+          </button>
         </div>
 
         {/* Stats Grid */}
@@ -115,9 +113,11 @@ export default function MesAnnonces() {
             </div>
             <h3>Aucune annonce trouvée</h3>
             <p>Commencez par publier votre premier bien pour attirer des étudiants.</p>
-            <button className="btn-send-premium" onClick={() => navigate("/create-annonce")}>
-              Créer une annonce
-            </button>
+            {annonces.length === 0 && (
+              <button className="btn-send-premium" onClick={() => navigate("/create-annonce")}>
+                Créer une annonce
+              </button>
+            )}
           </div>
         ) : (
           <div className="management-list">
