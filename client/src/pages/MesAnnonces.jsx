@@ -1,15 +1,29 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../App";
+import { useWebSocket } from "../context/WebSocketContext";
 import "../styles/MesAnnonces.css";
 
 export default function MesAnnonces() {
   const { api, token, user, navigate } = useAuth();
+  const { subscribe } = useWebSocket();
   const [annonces, setAnnonces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [confirm, setConfirm] = useState(null);
   const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => { if (token) loadAnnonces(); }, [token]);
+
+  useEffect(() => {
+    if (!token || user?.role !== 'proprietaire') return;
+
+    const unsubUpdate = subscribe('annonce_update', () => loadAnnonces());
+    const unsubDelete = subscribe('annonce_deleted', () => loadAnnonces());
+
+    return () => {
+      unsubUpdate();
+      unsubDelete();
+    };
+  }, [token, user?.role, subscribe]);
 
   const loadAnnonces = async () => {
     setLoading(true);
@@ -60,13 +74,15 @@ export default function MesAnnonces() {
 
         {/* Header Prestige */}
         <div className="page-header-prestige">
-          <div>
+          <div className="page-header-top">
             <h1 className="detail-main-title">Tableau de Bord</h1>
             <p className="subtitle-prestige">{annonces.length} annonce{annonces.length > 1 ? "s" : ""} publiée{annonces.length > 1 ? "s" : ""}</p>
           </div>
-          <button className="btn-send-premium" onClick={() => navigate("/create-annonce")}>
-            + Nouvelle annonce
-          </button>
+          <div className="page-header-actions">
+            <button className="btn-send-premium" onClick={() => navigate("/create-annonce")}>
+              + Nouvelle annonce
+            </button>
+          </div>
         </div>
 
         {/* Stats Grid */}

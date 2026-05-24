@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Annonce = require('../models/Annonce');
+const { notifyUser } = require('../websocketManager');
 
 // ─── Créer une annonce ────────────────────────────────────────────────────────
 exports.creerAnnonce = async (req, res) => {
@@ -113,6 +114,20 @@ exports.getAnnoncesEnAttente = async (req, res) => {
   }
 };
 
+// ─── ADMIN : Stats (compteurs légers, sans populate) ──────────────────────────
+exports.getAdminStats = async (req, res) => {
+  try {
+    const [enAttente, active, rejetee] = await Promise.all([
+      Annonce.countDocuments({ statut: 'en_attente' }),
+      Annonce.countDocuments({ statut: 'active' }),
+      Annonce.countDocuments({ statut: 'rejetee' }),
+    ]);
+    res.status(200).json({ enAttente, active, rejetee });
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
+};
+
 // ─── ADMIN : Valider une annonce ──────────────────────────────────────────────
 exports.validerAnnonce = async (req, res) => {
   try {
@@ -125,6 +140,10 @@ exports.validerAnnonce = async (req, res) => {
     annonce.statut = 'active';
     annonce.commentaireAdmin = null;
     await annonce.save();
+
+    notifyUser(annonce.proprietaire.toString(), 'annonce_update', {
+      annonce: annonce.toObject()
+    });
 
     res.status(200).json({ message: 'Annonce validée et publiée avec succès', annonce });
   } catch (err) {
@@ -149,6 +168,10 @@ exports.rejeterAnnonce = async (req, res) => {
     annonce.commentaireAdmin = commentaire;
     await annonce.save();
 
+    notifyUser(annonce.proprietaire.toString(), 'annonce_update', {
+      annonce: annonce.toObject()
+    });
+
     res.status(200).json({ message: 'Annonce rejetée', annonce });
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
@@ -167,6 +190,10 @@ exports.archiverAnnonce = async (req, res) => {
     annonce.statut = 'archivee';
     await annonce.save();
 
+    notifyUser(annonce.proprietaire.toString(), 'annonce_update', {
+      annonce: annonce.toObject()
+    });
+
     res.status(200).json({ message: 'Annonce archivée', annonce });
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
@@ -182,7 +209,13 @@ exports.supprimerAnnonce = async (req, res) => {
     if (annonce.proprietaire.toString() !== req.user.id)
       return res.status(403).json({ message: 'Accès refusé' });
 
+    const proprietaireId = annonce.proprietaire.toString();
     await annonce.deleteOne();
+
+    notifyUser(proprietaireId, 'annonce_deleted', {
+      annonceId: req.params.id
+    });
+
     res.status(200).json({ message: 'Annonce supprimée' });
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur', error: err.message });

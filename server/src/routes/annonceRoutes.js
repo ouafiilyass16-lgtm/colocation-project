@@ -8,6 +8,8 @@ const adminMiddleware = require('../middleware/adminMiddleware');
 router.get('/', annonceController.getAnnonces);
 router.get('/recherche', annonceController.rechercherAnnonces);
 
+// Admin — stats (compteurs légers)
+router.get('/admin/stats', [authMiddleware, adminMiddleware], annonceController.getAdminStats);
 // Admin — toutes les annonces filtrables par ?statut=
 router.get('/admin/toutes', [authMiddleware, adminMiddleware], annonceController.getAnnoncesToutesAdmin);
 // Admin — en attente uniquement

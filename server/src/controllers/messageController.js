@@ -1,7 +1,6 @@
 // server/controllers/messageController.js
 const Message       = require('../models/Message');
 const User          = require('../models/User');
-const socketManager = require('../socket'); // ← NOUVEAU
 
 // ─── Envoyer un message ───────────────────────────────────────
 exports.envoyerMessage = async (req, res) => {
@@ -32,22 +31,7 @@ exports.envoyerMessage = async (req, res) => {
       .populate('destinataire','nom email photoUrl')
       .populate('annonce',     'titre ville prix');
 
-    // ── Émettre le message en temps réel au destinataire ──────
-    try {
-      const io             = socketManager.getIO();
-      const destSocketId   = socketManager.getSocketId(destinataireId);
-
-      if (destSocketId) {
-        // Le destinataire est en ligne → il reçoit le message instantanément
-        io.to(destSocketId).emit("new_message", messagePopule);
-        console.log(`📨 Message émis en temps réel vers ${destinataireId}`);
-      }
-    } catch (socketErr) {
-      // Socket non dispo — pas critique, le polling prend le relais
-      console.warn("Socket non dispo :", socketErr.message);
-    }
-
-    // 🛠️ ── NOUVEAU : LOGIQUE DE DISTINCTION PREMIER CONTACT / DISCUSSION ──
+    // ── LOGIQUE DE DISTINCTION PREMIER CONTACT / DISCUSSION ──
     let messageDeRetour = 'Message envoyé avec succès';
     
     if (annonceId) {
@@ -174,21 +158,6 @@ exports.marquerCommeLu = async (req, res) => {
 
     message.lu = true;
     await message.save();
-
-    // ── Notifier l'expéditeur que son message a été lu ────────
-    try {
-      const io            = socketManager.getIO();
-      const senderSocketId = socketManager.getSocketId(message.expediteur.toString());
-
-      if (senderSocketId) {
-        io.to(senderSocketId).emit("message_read", {
-          messageId: message._id,
-        });
-        console.log(`👁️ Lu notifié à ${message.expediteur}`);
-      }
-    } catch (socketErr) {
-      console.warn("Socket non dispo :", socketErr.message);
-    }
 
     res.status(200).json({ message: 'Message marqué comme lu' });
   } catch (err) {

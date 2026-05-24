@@ -61,14 +61,14 @@ export default function Home() {
         setAnnonces([]);
       }
 
-      // SCROLL AUTOMATIQUE : Défilement vers la section résultats
+      
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 100);
 
     } catch (err) {
       setAnnonces([]);
-      // Même en cas d'erreur (404), on scroll pour montrer le message "Aucun résultat"
+    
       resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
     setLoading(false);

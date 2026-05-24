@@ -27,24 +27,25 @@ export default function AdminPanel() {
     if (loadedRef.current) loadAdminData();
   }, [activeTab]);
 
-  const loadAdminData = async () => {
-    setLoading(true);
+  // Polling silencieux toutes les 5s pour les mises à jour en temps réel
+  useEffect(() => {
+    const interval = setInterval(() => loadAdminData(true), 5000);
+    return () => clearInterval(interval);
+  }, [activeTab]);
+
+  const loadAdminData = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
-      // ── Un seul appel API → on filtre côté client ──
-      const data = await api.get("/annonces/admin/toutes", token);
-      const all = Array.isArray(data) ? data : [];
-
-      setAnnonces(all.filter(a => a.statut === activeTab));
-      setStats({
-        enAttente: all.filter(a => a.statut === "en_attente").length,
-        active:    all.filter(a => a.statut === "active").length,
-        rejetee:   all.filter(a => a.statut === "rejetee").length,
-      });
-
+      const [annoncesData, statsData] = await Promise.all([
+        api.get(`/annonces/admin/toutes?statut=${activeTab}`, token),
+        api.get("/annonces/admin/stats", token),
+      ]);
+      setAnnonces(Array.isArray(annoncesData) ? annoncesData : []);
+      if (statsData) setStats(statsData);
     } catch (err) {
       console.error("Erreur admin :", err);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 

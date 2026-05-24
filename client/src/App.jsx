@@ -1,9 +1,7 @@
-import { socket } from "./socket";
 import {
   useState,
   createContext,
   useContext,
-  useEffect,
 } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
@@ -22,6 +20,7 @@ import AdminPanel from "./pages/AdminPanel";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FloatingThemeToggle from "./components/FloatingThemeToggle";
+import { WebSocketProvider } from "./context/WebSocketContext";
 
 export const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
@@ -76,17 +75,6 @@ export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user && token) {
-      socket.connect();
-      socket.emit("register", user._id);
-    }
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [user, token]);
-
   const login = (u, t) => {
     setUser(u);
     setToken(t);
@@ -96,7 +84,6 @@ export default function App() {
   };
 
   const logout = () => {
-    socket.disconnect();
     setUser(null);
     setToken(null);
     localStorage.removeItem("user");
@@ -106,26 +93,28 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, setUser, navigate, api }}>
-      <div style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", flexDirection: "column" }}>
-        <Navbar />
-        <div style={{ flex: 1 }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/annonce/:id" element={<AnnonceDetail />} />
-            <Route path="/create-annonce" element={<CreateAnnonce />} />
-            <Route path="/modifier-annonce/:id" element={<ModifierAnnonce />} />
-            <Route path="/mes-annonces" element={<MesAnnonces />} />
-            <Route path="/favoris" element={<Favoris />} />
-            <Route path="/messages" element={<Messages />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/admin" element={<AdminPanel />} />
-          </Routes>
+      <WebSocketProvider>
+        <div style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", flexDirection: "column" }}>
+          <Navbar />
+          <div style={{ flex: 1 }}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/annonce/:id" element={<AnnonceDetail />} />
+              <Route path="/create-annonce" element={<CreateAnnonce />} />
+              <Route path="/modifier-annonce/:id" element={<ModifierAnnonce />} />
+              <Route path="/mes-annonces" element={<MesAnnonces />} />
+              <Route path="/favoris" element={<Favoris />} />
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/admin" element={<AdminPanel />} />
+            </Routes>
+          </div>
+          <Footer />
+          <FloatingThemeToggle />
         </div>
-        <Footer />
-        <FloatingThemeToggle />
-      </div>
+      </WebSocketProvider>
     </AuthContext.Provider>
   );
 }
